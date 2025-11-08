@@ -3,7 +3,7 @@
 // ============================================================================
 import { Package, Search, Shield, TrendingUp, Users } from 'lucide-react';
 import React, { useState } from 'react';
-import { addTransfer, createBatch, getBatchHistory, getBatchHistoryAudit } from '../apiService';
+import { apiService } from './apiService';
 
 export function LogisticsPortal({ setPage }) {
   const [hoveredCard, setHoveredCard] = useState(null);

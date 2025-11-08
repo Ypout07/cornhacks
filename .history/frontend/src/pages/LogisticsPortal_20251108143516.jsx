@@ -1,42 +1,29 @@
 // ============================================================================
-// LogisticsPortal.jsx
+// LogisticsPortal.jsx - Premium Green & White Design
 // ============================================================================
-import { Package, Search, Shield, TrendingUp, Users } from 'lucide-react';
+import { ArrowRight, Package, Plus, Search, Shield, TrendingUp, Users } from 'lucide-react';
 import React, { useState } from 'react';
-import { addTransfer, createBatch, getBatchHistory, getBatchHistoryAudit } from '../apiService';
+
+// Mock apiService for preview - replace with: import { apiService } from "../apiService";
+const apiService = {
+  getBatchHistory: async (uuid) => {
+    return [
+      { action: 'Harvested', actor_name: 'Green Valley Farm', latitude: 10.3157, longitude: -84.2189, timestamp: new Date().toISOString() },
+      { action: 'Shipped', actor_name: 'Fresh Transport Co', latitude: 10.4157, longitude: -84.3189, timestamp: new Date().toISOString() }
+    ];
+  },
+  getBatchHistoryAudit: async (uuid) => {
+    return { trust_score: 'Verified', warnings: [] };
+  }
+};
 
 export function LogisticsPortal({ setPage }) {
   const [hoveredCard, setHoveredCard] = useState(null);
   const [batchUuid, setBatchUuid] = useState('');
+  const [history, setHistory] = useState(null);
+  const [audit, setAudit] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSearch = async () => {
-    if (!batchUuid.trim()) {
-      setError('Please enter a batch UUID');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
-    try {
-      const [historyData, auditData] = await Promise.all([
-        apiService.getBatchHistory(batchUuid),
-        apiService.getBatchHistoryAudit(batchUuid)
-      ]);
-
-      if (historyData && historyData.length > 0) {
-        setPage('customer', { history: historyData, audit: auditData, batchUuid });
-      } else {
-        setError('No batch found with this UUID');
-      }
-    } catch (err) {
-      setError('Failed to fetch batch data. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [error, setError] = useState(null);
 
   return (
     <div style={{ background: '#0a1f0a', minHeight: '100vh', color: 'white', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
@@ -69,6 +56,7 @@ export function LogisticsPortal({ setPage }) {
         background: 'linear-gradient(135deg, #0a1f0a 0%, #14532d 50%, #0a1f0a 100%)',
         borderBottom: '1px solid rgba(134, 239, 172, 0.1)'
       }}>
+        {/* Subtle Background Pattern */}
         <div style={{
           position: 'absolute',
           inset: 0,
@@ -107,114 +95,70 @@ export function LogisticsPortal({ setPage }) {
             Transparent, verifiable produce tracking powered by blockchain technology. From farm to table, every step authenticated.
           </p>
           
-          {/* Search Box */}
-          <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-              <input
-                type="text"
-                value={batchUuid}
-                onChange={(e) => {
-                  setBatchUuid(e.target.value);
-                  setError('');
-                }}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                placeholder="Enter Batch ID to track (e.g., MOCK-FS-110825-A)"
-                style={{
-                  flex: 1,
-                  padding: '1rem 1.5rem',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '2px solid rgba(134, 239, 172, 0.3)',
-                  borderRadius: '0.5rem',
-                  color: 'white',
-                  fontSize: '1.125rem',
-                  outline: 'none',
-                  transition: 'all 0.3s'
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
-                  e.currentTarget.style.borderColor = '#86efac';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                  e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.3)';
-                }}
-              />
-              <button
-                onClick={handleSearch}
-                disabled={loading}
-                style={{ 
-                  padding: '1rem 2.5rem',
-                  background: 'transparent',
-                  color: 'white',
-                  border: '2px solid rgba(134, 239, 172, 0.3)',
-                  borderRadius: '0.5rem',
-                  fontSize: '1.125rem',
-                  fontWeight: '600',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  transition: 'all 0.3s',
-                  letterSpacing: '0.01em',
-                  opacity: loading ? 0.6 : 1
-                }}
-                onMouseEnter={(e) => {
-                  if (!loading) {
-                    e.currentTarget.style.borderColor = '#86efac';
-                    e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.3)';
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                <Search size={20} strokeWidth={2.5} />
-                {loading ? 'Searching...' : 'Track Batch'}
-              </button>
-            </div>
-
-            {error && (
-              <div style={{
-                padding: '0.75rem 1rem',
-                background: 'rgba(239, 68, 68, 0.1)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
+          {/* CTA Buttons */}
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setPage('producer')}
+              style={{ 
+                padding: '0.875rem 2rem',
+                background: '#86efac',
+                color: '#0a1f0a',
+                border: 'none',
                 borderRadius: '0.5rem',
-                color: '#fca5a5',
-                fontSize: '0.9375rem',
-                textAlign: 'left'
-              }}>
-                {error}
-              </div>
-            )}
+                fontSize: '1.125rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                boxShadow: '0 4px 20px rgba(134, 239, 172, 0.3)',
+                transition: 'all 0.3s',
+                letterSpacing: '0.01em'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 30px rgba(134, 239, 172, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(134, 239, 172, 0.3)';
+              }}
+            >
+              <Plus size={20} strokeWidth={2.5} />
+              Producer Portal
+            </button>
 
-            {/* Producer Portal Link */}
-            <div style={{ marginTop: '2rem' }}>
-              <button
-                onClick={() => setPage('producer')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#86efac',
-                  fontSize: '1rem',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                  textUnderlineOffset: '4px',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#d1fae5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#86efac';
-                }}
-              >
-                Are you a producer? Click here to manage batches
-              </button>
-            </div>
+            <button
+              onClick={() => setPage('customer')}
+              style={{ 
+                padding: '0.875rem 2rem',
+                background: 'transparent',
+                color: 'white',
+                border: '2px solid rgba(134, 239, 172, 0.3)',
+                borderRadius: '0.5rem',
+                fontSize: '1.125rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                transition: 'all 0.3s',
+                letterSpacing: '0.01em'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#86efac';
+                e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.3)';
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <Search size={20} strokeWidth={2.5} />
+              Track Your Batch
+            </button>
           </div>
         </div>
       </section>
@@ -238,6 +182,7 @@ export function LogisticsPortal({ setPage }) {
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
             gap: '2rem' 
           }}>
+            {/* Feature Card 1 */}
             <div
               onMouseEnter={() => setHoveredCard(1)}
               onMouseLeave={() => setHoveredCard(null)}
@@ -271,6 +216,7 @@ export function LogisticsPortal({ setPage }) {
               </p>
             </div>
 
+            {/* Feature Card 2 */}
             <div
               onMouseEnter={() => setHoveredCard(2)}
               onMouseLeave={() => setHoveredCard(null)}
@@ -304,6 +250,7 @@ export function LogisticsPortal({ setPage }) {
               </p>
             </div>
 
+            {/* Feature Card 3 */}
             <div
               onMouseEnter={() => setHoveredCard(3)}
               onMouseLeave={() => setHoveredCard(null)}
@@ -427,6 +374,50 @@ export function LogisticsPortal({ setPage }) {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Footer CTA */}
+      <section style={{ 
+        padding: '5rem 3rem',
+        background: '#0a1f0a',
+        textAlign: 'center'
+      }}>
+        <h2 style={{ fontSize: '2.5rem', fontWeight: '300', marginBottom: '1rem', color: 'white', letterSpacing: '-0.02em' }}>
+          Ready to Get Started?
+        </h2>
+        <p style={{ fontSize: '1.125rem', color: '#d1fae5', marginBottom: '2.5rem', fontWeight: '300' }}>
+          Join the future of transparent food supply chains today.
+        </p>
+        <button
+          onClick={() => setPage('producer')}
+          style={{ 
+            padding: '1rem 2.5rem',
+            background: '#86efac',
+            color: '#0a1f0a',
+            border: 'none',
+            borderRadius: '0.5rem',
+            fontSize: '1.125rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            boxShadow: '0 8px 30px rgba(134, 239, 172, 0.3)',
+            transition: 'all 0.3s',
+            letterSpacing: '0.01em'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-3px)';
+            e.currentTarget.style.boxShadow = '0 12px 40px rgba(134, 239, 172, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 8px 30px rgba(134, 239, 172, 0.3)';
+          }}
+        >
+          Start Tracking Now
+          <ArrowRight size={20} strokeWidth={2.5} />
+        </button>
       </section>
 
       {/* Footer */}

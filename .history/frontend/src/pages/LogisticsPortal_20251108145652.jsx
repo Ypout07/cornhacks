@@ -4,7 +4,6 @@
 import { Package, Search, Shield, TrendingUp, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import { addTransfer, createBatch, getBatchHistory, getBatchHistoryAudit } from '../apiService';
-
 export function LogisticsPortal({ setPage }) {
   const [hoveredCard, setHoveredCard] = useState(null);
   const [batchUuid, setBatchUuid] = useState('');
@@ -334,95 +333,6 @@ export function LogisticsPortal({ setPage }) {
               </h3>
               <p style={{ fontSize: '1rem', color: '#a7f3d0', lineHeight: '1.6', fontWeight: '300' }}>
                 Build confidence with consumers by providing full visibility into your produce's journey, verified by blockchain technology.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section style={{ 
-        padding: '5rem 3rem', 
-        background: 'linear-gradient(180deg, #0a1f0a 0%, #14532d 50%, #0a1f0a 100%)',
-        borderTop: '1px solid rgba(134, 239, 172, 0.1)',
-        borderBottom: '1px solid rgba(134, 239, 172, 0.1)'
-      }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <h2 style={{ 
-            fontSize: '2.25rem', 
-            fontWeight: '300', 
-            textAlign: 'center', 
-            marginBottom: '3.5rem',
-            color: 'white',
-            letterSpacing: '-0.01em'
-          }}>
-            How It Works
-          </h2>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '3rem', textAlign: 'center' }}>
-            <div>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 1.5rem',
-                fontSize: '2rem',
-                fontWeight: '600',
-                color: '#0a1f0a'
-              }}>
-                1
-              </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Create Batch</h3>
-              <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
-                Producers register new produce batches with location and details
-              </p>
-            </div>
-
-            <div>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 1.5rem',
-                fontSize: '2rem',
-                fontWeight: '600',
-                color: '#0a1f0a'
-              }}>
-                2
-              </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Record Transfers</h3>
-              <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
-                Each handoff in the supply chain is logged with verification
-              </p>
-            </div>
-
-            <div>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 1.5rem',
-                fontSize: '2rem',
-                fontWeight: '600',
-                color: '#0a1f0a'
-              }}>
-                3
-              </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Track & Verify</h3>
-              <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
-                Customers scan and view complete verified journey history
               </p>
             </div>
           </div>
