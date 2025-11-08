@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 import random
+import utils
 
 app = Flask(__name__)
 
@@ -15,21 +16,20 @@ def init_batch():
     id = batch_data["farm_name"][0] + batch_data["harvest_date"][0] + str(batch_data["quantity_kg"])[0]
     id += str(batch_data["latitude"])[0] + str(batch_data["longitude"])[0] + batch_data["grade"][0] + batch_data["produce"][0]
     id += str(random.randint(0,9)) + str(random.randint(0,9)) + str(random.randint(0,9)) + str(random.randint(0,9))
-    temp[id] = batch_data
+    temp[id] = temp.get(id, ["0"])
+    temp[id][0] += "-" + utils.encodeJson(batch_data)
+    temp[id].append(batch_data)
+    print(temp) #Delete later
     return jsonify({"message" : "Batch has been initialized",
             "batch_uuid" : id})
 
-"""
-{ 
-“batch_uuid”: “676767-67-A”,
-	“latitude”: 10.45,
-“longitude”: 67.67,
-“company_name”: “bananacorp distributors”,
-“action”: “Received from farm”
-}
-"""
 @app.route("/api/transfer", methods=["POST"])
 def transfer_batch():
+    transfer_data = request.get_json()
+    id = transfer_data["batch_uuid"]
+    temp[id][0] += "-" + utils.encodeJson(transfer_data)
+    temp[id].append(transfer_data)
+    print(f"\n{temp}") #Delete later
     return jsonify({"message": "Transfer recorded"})
 
 """
