@@ -32,27 +32,9 @@ def transfer_batch():
     print(f"\n{temp}") #Delete later
     return jsonify({"message": "Transfer recorded"})
 
-"""
-Received:
-[ { 
-“company_name”: “67 farms inc.”
-“action”: “Harvested”,
-"timestamp": "6767-67-67T67:67:67Z", 
-"latitude": 67.67, 
-"longitude": -67.67
-}, {
-	“company_name”: “67 shipping inc.”
-“action”: "Received from Farm”,
-"timestamp": "6767-68-67T67:67:67Z", 
-"latitude": 67.67, 
-"longitude": -67.67
-}, {
-…
-} ]
-"""
 @app.route("/api/batch/<id>", methods=["POST"])
 def get_data(id):
-    return jsonify(temp[id])
+    return jsonify(temp[id][1:])
 
 if __name__ == '__main__':
     app.run()
