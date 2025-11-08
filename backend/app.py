@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-id = 0
 temp = {}
 
 @app.route("/")
@@ -23,8 +22,7 @@ def home():
 @app.route("/api/batch", methods=["POST"])
 def init_batch():
     batch_data = request.get_json()
-    id += 1
-    temp[id] = batch_data
+    id = 0
     return jsonify({"message" : "Batch has been initialized",
             "batch_uuid" : id})
 
