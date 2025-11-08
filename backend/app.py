@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -21,7 +21,8 @@ def home():
         }
 """
 @app.route("/api/batch", methods=["POST"])
-def init_batch(batch_data):
+def init_batch():
+    batch_data = request.get_json()
     id += 1
     temp[id] = batch_data
     return jsonify({"message" : "Batch has been initialized",
@@ -37,7 +38,7 @@ def init_batch(batch_data):
 }
 """
 @app.route("/api/transfer", methods=["POST"])
-def transfer_batch(batch_data):
+def transfer_batch():
     return jsonify({"message": "Transfer recorded"})
 
 """
@@ -59,7 +60,7 @@ Received:
 } ]
 """
 @app.route("/api/batch/<uuid>", methods=["POST"])
-def get_data(id):
+def get_data():
     return jsonify(temp)
 
 if __name__ == '__main__':
