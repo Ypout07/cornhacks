@@ -1,3 +1,6 @@
+// ============================================================================
+// CustomerView.jsx
+// ============================================================================
 import { AlertCircle, CheckCircle, Clock, MapPin, Search } from 'lucide-react';
 import React, { useState } from 'react';
 import { getBatchHistory, getBatchHistoryAudit } from '../apiService';
