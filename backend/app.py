@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import random
-from utils import encodeJson
+from .utils import encodeJson
+#py -m backend.app
 
 app = Flask(__name__)
 
