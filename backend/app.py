@@ -7,7 +7,7 @@ temp = {}
 
 @app.route("/")
 def home():
-    return {"message" : "NOT LMAO"}
+    return {"message" : "LMAO OK"}
 
 """
 {
