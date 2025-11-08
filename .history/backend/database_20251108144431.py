@@ -1,14 +1,19 @@
+# /backend/models.py
+
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, ForeignKey, Text
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 import datetime
 
-# Setup
-DATABASE_URL = "sqlite:///./project.db"
+# --- Database Setup ---
+# This tells SQLAlchemy what our database file is called.
+# 'sqlite:///./provenance.db' means it will create a file named 'provenance.db'
+# right inside your /backend folder.
+DATABASE_URL = "sqlite:///./provenance.db"
 
-# Base class
+# This is the "base" class all our table-models will inherit from
 Base = declarative_base()
 
-# The following are different tables:
+# --- Table Definitions ---
 
 class Batch(Base):
     """
@@ -23,6 +28,8 @@ class Batch(Base):
     harvest_date = Column(String)
     quantity_kg = Column(Float)
     
+    # This creates a "one-to-many" relationship.
+    # One Batch can have MANY LedgerBlocks.
     ledger_blocks = relationship("LedgerBlock", back_populates="batch")
 
 class LedgerBlock(Base):
@@ -44,14 +51,26 @@ class LedgerBlock(Base):
     previous_hash = Column(Text, nullable=True) # Null only for the genesis block
     current_hash = Column(Text, unique=True, nullable=False)
     
+    # This is the "many-to-one" side.
+    # It links this block to a specific Batch.
     batch_id = Column(Integer, ForeignKey("batches.id"))
     batch = relationship("Batch", back_populates="ledger_blocks")
 
-# Connection point
+
+# --- Engine and Session Setup ---
+# These are the tools that connect to and talk to the database.
+
+# The "engine" is the connection.
 engine = create_engine(DATABASE_URL)
 
-# Use in app.py to save data
+# The "SessionLocal" is what you'll use in your app.py to
+# actually query or save data.
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-def create_db_and_tables(): # Only run ONCE in app.py
+# --- Helper Function ---
+def create_db_and_tables():
+    """
+    A function to create the database file and all tables.
+    You'll run this once from your app.py.
+    """
     Base.metadata.create_all(bind=engine)
