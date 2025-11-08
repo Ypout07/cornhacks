@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 import random
-import utils
+from utils import encodeJson
 
 app = Flask(__name__)
 
@@ -17,7 +17,7 @@ def init_batch():
     id += str(batch_data["latitude"])[0] + str(batch_data["longitude"])[0] + batch_data["grade"][0] + batch_data["produce"][0]
     id += str(random.randint(0,9)) + str(random.randint(0,9)) + str(random.randint(0,9)) + str(random.randint(0,9))
     temp[id] = temp.get(id, ["0"])
-    temp[id][0] += "-" + utils.encodeJson(batch_data)
+    temp[id][0] += "-" + encodeJson(batch_data)
     temp[id].append(batch_data)
     print(temp) #Delete later
     return jsonify({"message" : "Batch has been initialized",
@@ -27,7 +27,7 @@ def init_batch():
 def transfer_batch():
     transfer_data = request.get_json()
     id = transfer_data["batch_uuid"]
-    temp[id][0] += "-" + utils.encodeJson(transfer_data)
+    temp[id][0] += "-" + encodeJson(transfer_data)
     temp[id].append(transfer_data)
     print(f"\n{temp}") #Delete later
     return jsonify({"message": "Transfer recorded"})
