@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+import random
 
 app = Flask(__name__)
 
@@ -22,7 +23,9 @@ def home():
 @app.route("/api/batch", methods=["POST"])
 def init_batch():
     batch_data = request.get_json()
-    id = 0
+    id = batch_data["farm_name"][0] + batch_data["harvest_date"][0] + str(batch_data["quantity_kg"])[0]
+    id += str(batch_data["latitude"])[0] + str(batch_data["longitude"])[0] + batch_data["grade"][0] + batch_data["produce"][0]
+    id += str(random.randint(0,9)) + str(random.randint(0,9)) + str(random.randint(0,9)) + str(random.randint(0,9))
     return jsonify({"message" : "Batch has been initialized",
             "batch_uuid" : id})
 
