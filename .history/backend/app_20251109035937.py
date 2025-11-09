@@ -235,6 +235,7 @@ def transfer_batch():
     finally:
         db.close()
 
+
 @app.route("/api/batch/<batch_uuid>", methods=["GET"])
 def get_data(batch_uuid):
 
