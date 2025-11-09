@@ -201,7 +201,7 @@ export function ProducerPortal({ setPage }) {
         return;
       }
     } else {
-      if (!formData.batch_uuid || !formData.farm_name || !formData.action || !formData.grade || !formData.latitude || !formData.longitude) {
+      if (!formData.batch_uuid || !formData.farm_name || !formData.action || !formData.latitude || !formData.longitude) {
         setMessage({ type: "error", text: "Please fill in all fields for the transfer" });
         return;
       }
@@ -239,7 +239,8 @@ export function ProducerPortal({ setPage }) {
           action: formData.action,
           latitude: parseFloat(formData.latitude),
           longitude: parseFloat(formData.longitude),
-          grade: formData.grade || null,
+          temperature_celsius: formData.temperature_celsius ? parseFloat(formData.temperature_celsius) : null,
+          condition: formData.condition || null,
           crate_numbers_string: formData.crate_numbers_string || null,
         };
 
@@ -487,14 +488,19 @@ export function ProducerPortal({ setPage }) {
 
             {mode === "transfer" && (
               <>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', color: '#d1fae5', fontSize: '0.875rem' }}>Crate Numbers </label>
+                  <input type="text" name="crate_numbers_string" placeholder="e.g., 101, 102, 105-110" value={formData.crate_numbers_string} onChange={handleChange} style={inputStyle} />
+                </div>
+                
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#d1fae5', fontSize: '0.875rem' }}>Grade</label>
-                    <input type="text" name="grade" placeholder="e.g., A, B" value={formData.grade} onChange={handleChange} style={inputStyle} />
+                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#d1fae5', fontSize: '0.875rem' }}>Temperature (°C)</label>
+                    <input type="number" name="temperature_celsius" placeholder="e.g., 14" value={formData.temperature_celsius} onChange={handleChange} style={inputStyle} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#d1fae5', fontSize: '0.875rem' }}>Crate Numbers</label>
-                    <input type="text" name="crate_numbers_string" placeholder="e.g., 101, 102, 105-110" value={formData.crate_numbers_string} onChange={handleChange} style={inputStyle} />
+                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#d1fae5', fontSize: '0.875rem' }}>Condition</label>
+                    <input type="text" name="condition" placeholder="e.g., Good" value={formData.condition} onChange={handleChange} style={inputStyle} />
                   </div>
                 </div>
 
@@ -520,16 +526,16 @@ export function ProducerPortal({ setPage }) {
               </>
             )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', color: '#d1fae5', fontSize: '0.875rem' }}>Latitude</label>
-                <input type="text" name="latitude" placeholder="e.g., 40.7128" value={formData.latitude} onChange={handleChange} style={inputStyle} />
-              </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', color: '#d1fae5', fontSize: '0.875rem' }}>Longitude</label>
-                <input type="text" name="longitude" placeholder="e.g., -74.0060" value={formData.longitude} onChange={handleChange} style={inputStyle} />
-              </div>
-            </div>
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+  <div>
+    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#d1fae5', fontSize: '0.875rem' }}>Latitude</label>
+    <input type="text" name="latitude" placeholder="e.g., 40.7128" value={formData.latitude} onChange={handleChange} style={inputStyle} />
+  </div>
+  <div>
+    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#d1fae5', fontSize: '0.875rem' }}>Longitude</label>
+    <input type="text" name="longitude" placeholder="e.g., -74.0060" value={formData.longitude} onChange={handleChange} style={inputStyle} />
+  </div>
+</div>
 
             <button
               onClick={handleSubmit}
