@@ -53,7 +53,7 @@ export function ProducerPortal({ setPage }) {
     try {
       if (mode === "create") {
         const data = {
-          farm_name: formData.farm_name,
+          actor_name: formData.farm_name,
           action: "harvest",
           latitude: parseFloat(formData.latitude),
           longitude: parseFloat(formData.longitude),
@@ -70,7 +70,7 @@ export function ProducerPortal({ setPage }) {
       } else {
         const data = {
           batch_uuid: formData.batch_uuid,
-          farm_name: formData.farm_name,
+          actor_name: formData.farm_name,
           action: formData.action,
           latitude: parseFloat(formData.latitude),
           longitude: parseFloat(formData.longitude),
