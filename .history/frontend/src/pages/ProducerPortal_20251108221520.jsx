@@ -111,18 +111,10 @@ export function ProducerPortal({ setPage }) {
   };
 
   return (
-    <div style={{ 
-      background: '#0a1f0a', 
-      height: '100vh',
-      width: '100vw',
-      color: 'white', 
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-      overflow: 'hidden',
-      position: 'relative'
-    }}>
+    <div style={{ background: '#0a1f0a', minHeight: '100vh', color: 'white', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", overflow: 'hidden' }}>
       {/* Header */}
       <header style={{ 
-        position: 'absolute', 
+        position: 'fixed',
         top: 0, 
         left: 0, 
         right: 0, 
@@ -135,7 +127,7 @@ export function ProducerPortal({ setPage }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Package size={32} color="#86efac" strokeWidth={2} />
-          <span style={{ fontSize: '1.25rem', fontWeight: '500', color: 'white', letterSpacing: '0.02em' }}>BANANA BLOCKCHAIN</span>
+          <span style={{ fontSize: '1.25rem', fontWeight: '600', color: 'white', letterSpacing: '0.05em' }}>BANANA BLOCKCHAIN</span>
         </div>
         <button
           onClick={() => setPage('home')}
@@ -170,16 +162,12 @@ export function ProducerPortal({ setPage }) {
 
       {/* Main Content */}
       <div style={{ 
-        position: 'absolute',
-        top: '5rem',
-        left: 0,
-        right: 0,
-        bottom: 0,
+        minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         background: 'linear-gradient(135deg, #0a1f0a 0%, #14532d 50%, #0a1f0a 100%)',
-        overflow: 'auto'
+        padding: '8rem 2rem 4rem'
       }}>
         <div style={{
           position: 'absolute',
