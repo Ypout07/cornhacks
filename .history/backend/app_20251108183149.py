@@ -141,7 +141,6 @@ def transfer_batch():
 
     except Exception as e:
         db.rollback() # Undo if there's an error
-        print(f"--- ERROR IN /api/transfer ---: {e}")
         return jsonify({"error": str(e)}), 400
     finally:
         db.close() # Close up
