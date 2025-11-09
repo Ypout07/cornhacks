@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import random
-from database import SessionLocal, Batch, LedgerBlock, create_db_and_tables
-from utils import calculate_hash
+from .database import SessionLocal, Batch, LedgerBlock, create_db_and_tables
+from .utils import calculate_hash, haversine_audit_logic
 import datetime
 
 # Inits
@@ -137,6 +137,8 @@ def transfer_batch():
         db.add(new_block)
         db.commit()
 
+        valid_data(batch_uuid)
+        
         return jsonify({"message": "Transfer recorded"})
 
     except Exception as e:
@@ -180,6 +182,36 @@ def get_data(batch_uuid):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    finally:
+        db.close()
+
+def valid_data(batch_uuid):
+    db = next(get_db())
+    try:
+        # Again, finds batch
+        batch = db.query(Batch).filter(Batch.batch_uuid == batch_uuid).first()
+
+        if not batch:
+            return jsonify({"error": "Batch not found"}), 404
+
+        # Gives the list of all LedgerBlocks
+        blocks = db.query(LedgerBlock).filter(
+            LedgerBlock.batch_id == batch.id
+        ).order_by(LedgerBlock.id.asc()).all() # .asc() = ascending, 1, 2, 3...
+
+        # Format
+        history_list = []
+        for block in blocks:
+            history_list.append({
+                "timestamp": block.timestamp, # Format as ISO string
+                "latitude": block.latitude,
+                "longitude": block.longitude
+            })
+        
+        return haversine_audit_logic(history_list)
+
+    except Exception as e:
+        return False
     finally:
         db.close()
 
