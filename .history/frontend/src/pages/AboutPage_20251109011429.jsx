@@ -5,43 +5,32 @@ import { ArrowLeft, Package, Shield, TrendingUp, Users } from 'lucide-react';
 import React from 'react';
 
 export function AboutPage({ setPage, scrollToSection }) {
-  const scrollContainerRef = React.useRef(null);
-
   React.useEffect(() => {
-    if (scrollToSection && scrollContainerRef.current) {
+    if (scrollToSection) {
       // Wait for content to render, then scroll
       setTimeout(() => {
         const element = document.getElementById(scrollToSection);
         if (element) {
-          const container = scrollContainerRef.current;
-          const elementTop = element.offsetTop;
-          const offset = 100; // Account for fixed header
-          
-          container.scrollTo({
-            top: elementTop - offset,
-            behavior: 'smooth'
-          });
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       }, 100);
     }
   }, [scrollToSection]);
 
   return (
-    <div 
-      ref={scrollContainerRef}
-      style={{ 
-        background: '#0a1f0a', 
-        minHeight: '100vh',
-        height: '100vh',
-        color: 'white', 
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        overflow: 'auto',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-      }}>
+    <div style={{ 
+      background: '#0a1f0a', 
+      minHeight: '100vh',
+      height: '100vh',
+      color: 'white', 
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      overflow: 'auto',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
+    }}>
       {/* Header */}
       <header style={{ 
         position: 'fixed',
