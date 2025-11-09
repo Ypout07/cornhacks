@@ -1,20 +1,11 @@
 // ============================================================================
 // ProducerPortal.jsx
 // ============================================================================
-import { AlertCircle, ArrowLeft, CheckCircle, Package, X } from "lucide-react";
+import { AlertCircle, ArrowLeft, CheckCircle, Package } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from 'three';
+import { addTransfer, createBatch } from '../apiService';
 
-// Mock API functions - replace with your actual implementations
-const createBatch = async (data) => {
-  console.log('Creating batch:', data);
-  return { batch_uuid: 'BATCH-' + Math.random().toString(36).substr(2, 9), pdf_url: '#' };
-};
-
-const addTransfer = async (data) => {
-  console.log('Adding transfer:', data);
-  return { success: true };
-};
 
 export function ProducerPortal({ setPage }) {
   const [mode, setMode] = useState("create");
@@ -36,11 +27,6 @@ export function ProducerPortal({ setPage }) {
   const [loading, setLoading] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null);
   const mountRef = useRef(null);
-  const [showScanner, setShowScanner] = useState(false);
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const streamRef = useRef(null);
-  const scanIntervalRef = useRef(null);
 
   // Globe setup
   useEffect(() => {
@@ -49,8 +35,11 @@ export function ProducerPortal({ setPage }) {
     let globeRef = null;
     let atmosphereRef = null;
     let globeGroup = null;
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
     let rotation = { x: 0, y: 0 };
     let targetRotation = { x: 0, y: 0 };
+    let activePointerId = null;
 
     try {
       // Scene setup
@@ -69,7 +58,7 @@ export function ProducerPortal({ setPage }) {
       renderer.setClearColor(0x0a1f0a, 1);
       renderer.domElement.style.touchAction = 'none';
       renderer.domElement.style.userSelect = 'none';
-      renderer.domElement.style.pointerEvents = 'none';
+      renderer.domElement.style.pointerEvents = 'none'; // Don't block form interactions
       mountRef.current.appendChild(renderer.domElement);
 
       // Create group that will be rotated
@@ -90,6 +79,7 @@ export function ProducerPortal({ setPage }) {
       );
 
       // Create Earth globe (textured)
+      // Create Earth globe (textured)
       const geometry = new THREE.SphereGeometry(150, 100, 100);
       
       const earthMaterial = new THREE.MeshPhongMaterial({
@@ -97,7 +87,7 @@ export function ProducerPortal({ setPage }) {
         shininess: 10,
         opacity: 0.95,
         transparent: true,
-        color: 0x000000
+        color: '0x000000'
       });
 
       const globe = new THREE.Mesh(geometry, earthMaterial);
@@ -187,10 +177,10 @@ export function ProducerPortal({ setPage }) {
         });
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0x000000, 0.7);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0x000000, 0.9);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
       directionalLight.position.set(5, 3, 5);
       scene.add(directionalLight);
 
@@ -283,99 +273,6 @@ export function ProducerPortal({ setPage }) {
       action: action,
     });
   };
-
-  // Simple QR code decoder using canvas
-  const decodeQRFromCanvas = (canvas) => {
-    const context = canvas.getContext('2d');
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-    
-    // Very simple pattern detection - in production use jsQR library
-    // This is a mock implementation
-    let bright = 0;
-    let dark = 0;
-    
-    for (let i = 0; i < data.length; i += 4) {
-      const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-      if (avg > 128) bright++;
-      else dark++;
-    }
-    
-    // If we detect a pattern (just a mock check), return mock data
-    if (bright > 0 && dark > 0) {
-      // In real implementation, jsQR would decode the actual QR code
-      return null;
-    }
-    
-    return null;
-  };
-
-  const startScanner = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
-      });
-      
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      }
-      
-      setShowScanner(true);
-      
-      // Start scanning for QR codes
-      scanIntervalRef.current = setInterval(() => {
-        if (videoRef.current && canvasRef.current && videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
-          const canvas = canvasRef.current;
-          const video = videoRef.current;
-          const context = canvas.getContext('2d');
-          
-          canvas.height = video.videoHeight;
-          canvas.width = video.videoWidth;
-          
-          context.drawImage(video, 0, 0, canvas.width, canvas.height);
-          
-          // In production, use jsQR library here:
-          // const code = jsQR(imageData.data, imageData.width, imageData.height);
-          // For demo, we'll simulate detection
-          const detected = decodeQRFromCanvas(canvas);
-          
-          if (detected) {
-            setFormData(prev => ({
-              ...prev,
-              batch_uuid: detected
-            }));
-            setMessage({ type: 'success', text: 'QR Code scanned successfully!' });
-            stopScanner();
-          }
-        }
-      }, 100);
-    } catch (error) {
-      console.error('Camera error:', error);
-      setMessage({ type: 'error', text: 'Unable to access camera. Please check permissions.' });
-    }
-  };
-
-  const stopScanner = () => {
-    if (scanIntervalRef.current) {
-      clearInterval(scanIntervalRef.current);
-    }
-    
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-    
-    setShowScanner(false);
-  };
-
-  // Cleanup scanner on unmount
-  useEffect(() => {
-    return () => {
-      stopScanner();
-    };
-  }, []);
 
   const handleSubmit = async () => {
     setMessage(null);
@@ -742,7 +639,7 @@ export function ProducerPortal({ setPage }) {
             </div>
           )}
 
-          {/* Form */}
+          {/* Form - NO OUTLINE */}
           <div style={{
             padding: '2rem',
             backdropFilter: 'blur(20px)',
@@ -825,6 +722,7 @@ export function ProducerPortal({ setPage }) {
                         transition: 'all 0.3s',
                         boxSizing: 'border-box',
                         letterSpacing: '0.01em',
+                        
                       }}
                       onFocus={(e) => {
                         e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -868,6 +766,7 @@ export function ProducerPortal({ setPage }) {
                           boxSizing: 'border-box',
                           letterSpacing: '0.01em',
                           colorScheme: 'dark',
+                          
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -909,6 +808,7 @@ export function ProducerPortal({ setPage }) {
                           transition: 'all 0.3s',
                           boxSizing: 'border-box',
                           letterSpacing: '0.01em',
+                          
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -953,6 +853,7 @@ export function ProducerPortal({ setPage }) {
                           transition: 'all 0.3s',
                           boxSizing: 'border-box',
                           letterSpacing: '0.01em',
+                          
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -994,6 +895,7 @@ export function ProducerPortal({ setPage }) {
                           transition: 'all 0.3s',
                           boxSizing: 'border-box',
                           letterSpacing: '0.01em',
+                          
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -1037,6 +939,7 @@ export function ProducerPortal({ setPage }) {
                         transition: 'all 0.3s',
                         boxSizing: 'border-box',
                         letterSpacing: '0.01em',
+                        
                       }}
                       onFocus={(e) => {
                         e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -1083,6 +986,7 @@ export function ProducerPortal({ setPage }) {
                         transition: 'all 0.3s',
                         boxSizing: 'border-box',
                         letterSpacing: '0.01em',
+                        
                       }}
                       onFocus={(e) => {
                         e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -1125,6 +1029,7 @@ export function ProducerPortal({ setPage }) {
                         transition: 'all 0.3s',
                         boxSizing: 'border-box',
                         letterSpacing: '0.01em',
+                        
                       }}
                       onFocus={(e) => {
                         e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -1155,15 +1060,16 @@ export function ProducerPortal({ setPage }) {
                         style={{
                           flex: 1,
                           padding: '0.875rem',
-                          background: formData.action === 'Arrived At Warehouse' ? 'rgba(134, 239, 172, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                          border: `2px solid ${formData.action === 'Arrived At Warehouse' ? '#86efac' : 'rgba(134, 239, 172, 0.2)'}`,
+                          background: formData.action === 'transfer' ? 'rgba(134, 239, 172, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                          border: `2px solid ${formData.action === 'transfer' ? '#86efac' : 'rgba(134, 239, 172, 0.2)'}`,
                           borderRadius: '0.5rem',
-                          color: formData.action === 'Arrived At Warehouse' ? '#86efac' : '#a7f3d0',
+                          color: formData.action === 'transfer' ? '#86efac' : '#a7f3d0',
                           fontSize: '0.9375rem',
                           fontWeight: '400',
                           cursor: 'pointer',
                           transition: 'all 0.3s',
                           letterSpacing: '0.01em',
+                          
                         }}
                       >
                         Arrived At Warehouse
@@ -1183,6 +1089,7 @@ export function ProducerPortal({ setPage }) {
                           cursor: 'pointer',
                           transition: 'all 0.3s',
                           letterSpacing: '0.01em',
+                          
                         }}
                       >
                         Arrived At Store
@@ -1222,6 +1129,7 @@ export function ProducerPortal({ setPage }) {
                       outline: 'none',
                       boxSizing: 'border-box',
                       letterSpacing: '0.01em',
+                      
                     }}
                   />
                 </div>
@@ -1253,6 +1161,7 @@ export function ProducerPortal({ setPage }) {
                       outline: 'none',
                       boxSizing: 'border-box',
                       letterSpacing: '0.01em',
+                      
                     }}
                   />
                 </div>
@@ -1295,211 +1204,6 @@ export function ProducerPortal({ setPage }) {
           </div>
         </div>
       </div>
-
-      {/* QR Scanner Button - Lower Right Corner */}
-      {mode === "transfer" && !showScanner && (
-        <button
-          onClick={startScanner}
-          style={{
-            position: 'fixed',
-            bottom: '2rem',
-            right: '2rem',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '1rem',
-            background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
-            border: 'none',
-            borderRadius: '1rem',
-            cursor: 'pointer',
-            boxShadow: '0 8px 30px rgba(134, 239, 172, 0.4)',
-            transition: 'all 0.3s',
-            zIndex: 100
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
-            e.currentTarget.style.boxShadow = '0 12px 40px rgba(134, 239, 172, 0.6)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0) scale(1)';
-            e.currentTarget.style.boxShadow = '0 8px 30px rgba(134, 239, 172, 0.4)';
-          }}
-        >
-          <span style={{
-            fontSize: '0.75rem',
-            fontWeight: '600',
-            color: '#0a1f0a',
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em'
-          }}>
-            Scan Me
-          </span>
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style={{ display: 'block' }}>
-            <rect x="4" y="4" width="16" height="16" fill="#0a1f0a" rx="2"/>
-            <rect x="8" y="8" width="8" height="8" fill="#86efac" rx="1"/>
-            <rect x="28" y="4" width="16" height="16" fill="#0a1f0a" rx="2"/>
-            <rect x="32" y="8" width="8" height="8" fill="#86efac" rx="1"/>
-            <rect x="4" y="28" width="16" height="16" fill="#0a1f0a" rx="2"/>
-            <rect x="8" y="32" width="8" height="8" fill="#86efac" rx="1"/>
-            <rect x="28" y="28" width="4" height="4" fill="#0a1f0a"/>
-            <rect x="34" y="28" width="4" height="4" fill="#0a1f0a"/>
-            <rect x="40" y="28" width="4" height="4" fill="#0a1f0a"/>
-            <rect x="28" y="34" width="4" height="4" fill="#0a1f0a"/>
-            <rect x="34" y="34" width="4" height="4" fill="#0a1f0a"/>
-            <rect x="40" y="34" width="4" height="4" fill="#0a1f0a"/>
-            <rect x="28" y="40" width="4" height="4" fill="#0a1f0a"/>
-            <rect x="34" y="40" width="4" height="4" fill="#0a1f0a"/>
-            <rect x="40" y="40" width="4" height="4" fill="#0a1f0a"/>
-          </svg>
-        </button>
-      )}
-
-      {/* QR Scanner Modal */}
-      {showScanner && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0, 0, 0, 0.95)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: '2rem'
-        }}>
-          <button
-            onClick={stopScanner}
-            style={{
-              position: 'absolute',
-              top: '2rem',
-              right: '2rem',
-              background: 'rgba(239, 68, 68, 0.2)',
-              border: '2px solid rgba(239, 68, 68, 0.4)',
-              color: '#fca5a5',
-              padding: '0.75rem',
-              borderRadius: '0.5rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '1rem',
-              fontWeight: '600',
-              transition: 'all 0.3s'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.3)';
-              e.currentTarget.style.borderColor = '#ef4444';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
-              e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.4)';
-            }}
-          >
-            <X size={20} />
-            Close
-          </button>
-
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '2rem'
-          }}>
-            <h2 style={{
-              fontSize: '2rem',
-              fontWeight: '600',
-              color: '#86efac',
-              marginBottom: '0.5rem'
-            }}>
-              Scan QR Code
-            </h2>
-            <p style={{
-              fontSize: '1rem',
-              color: '#d1fae5',
-              fontWeight: '300'
-            }}>
-              Position the QR code within the camera view
-            </p>
-          </div>
-
-          <div style={{
-            position: 'relative',
-            width: '100%',
-            maxWidth: '500px',
-            aspectRatio: '1',
-            borderRadius: '1rem',
-            overflow: 'hidden',
-            border: '4px solid #86efac',
-            boxShadow: '0 0 40px rgba(134, 239, 172, 0.3)'
-          }}>
-            <video
-              ref={videoRef}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover'
-              }}
-            />
-            
-            <div style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '80%',
-              height: '80%',
-              border: '3px solid #86efac',
-              borderRadius: '1rem',
-              pointerEvents: 'none'
-            }}>
-              <div style={{
-                position: 'absolute',
-                top: '-3px',
-                left: '-3px',
-                width: '40px',
-                height: '40px',
-                borderTop: '6px solid #86efac',
-                borderLeft: '6px solid #86efac',
-                borderRadius: '0.5rem 0 0 0'
-              }} />
-              <div style={{
-                position: 'absolute',
-                top: '-3px',
-                right: '-3px',
-                width: '40px',
-                height: '40px',
-                borderTop: '6px solid #86efac',
-                borderRight: '6px solid #86efac',
-                borderRadius: '0 0.5rem 0 0'
-              }} />
-              <div style={{
-                position: 'absolute',
-                bottom: '-3px',
-                left: '-3px',
-                width: '40px',
-                height: '40px',
-                borderBottom: '6px solid #86efac',
-                borderLeft: '6px solid #86efac',
-                borderRadius: '0 0 0 0.5rem'
-              }} />
-              <div style={{
-                position: 'absolute',
-                bottom: '-3px',
-                right: '-3px',
-                width: '40px',
-                height: '40px',
-                borderBottom: '6px solid #86efac',
-                borderRight: '6px solid #86efac',
-                borderRadius: '0 0 0.5rem 0'
-              }} />
-            </div>
-          </div>
-
-          <canvas ref={canvasRef} style={{ display: 'none' }} />
-        </div>
-      )}
     </div>
   );
 }
