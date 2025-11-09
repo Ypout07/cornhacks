@@ -14,10 +14,10 @@ def calculate_hash(data_to_hash, previous_hash):
 def haversine_audit_logic(data):
     SPEED = 300 #Suspicion (km/hr)
     location1 = (data[0]["latitude"], data[0]["longitude"])
-    time1 = datetime.datetime.fromisoformat(data[0]["timestamp"])
+    time1 = data[0]["timestamp"]
     for i in range(len(data)-1):
         location2 = (data[i+1]["latitude"], data[i+1]["longitude"])
-        time2 = datetime.datetime.fromisoformat(data[i+1]["timestamp"])
+        time2 = data[i+1]["timestamp"]
         if (time2 - time1).total_seconds() <= 0:
             return False
         time = (time2 - time1).total_seconds() / 3600
