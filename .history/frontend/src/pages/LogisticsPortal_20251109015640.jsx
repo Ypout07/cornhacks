@@ -68,7 +68,7 @@ opacity: Math.random() * 0.3 + 0.6  // Changed from * 0.5 + 0.2
 
           if (distance < 250) {  // Changed from 150
             ctx.strokeStyle = `rgba(0, 0, 0, ${0.4 * (1 - distance / 250)})`;  // Changed from 0.15
-            ctx.lineWidth = 1.5;  // Changed from 0.5
+            ctx.lineWidth = 0;  // Changed from 0.5
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(other.x, other.y);

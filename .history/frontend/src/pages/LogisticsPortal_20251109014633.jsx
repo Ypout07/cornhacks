@@ -25,8 +25,8 @@ function AnimatedMapBackground() {
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * 0.5,
         vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 3 + 2,  // Changed from * 2 + 1
-opacity: Math.random() * 0.3 + 0.6  // Changed from * 0.5 + 0.2
+        size: Math.random() * 2 + 1,
+        opacity: Math.random() * 0.5 + 0.2
       });
     }
 
@@ -52,8 +52,8 @@ opacity: Math.random() * 0.3 + 0.6  // Changed from * 0.5 + 0.2
           particle.x, particle.y, 0,
           particle.x, particle.y, particle.size * 3
         );
-        gradient.addColorStop(0, `rgba(0, 0, 0, ${particle.opacity})`);
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        gradient.addColorStop(0, `rgba(134, 239, 172, ${particle.opacity})`);
+        gradient.addColorStop(1, 'rgba(134, 239, 172, 0)');
         
         ctx.fillStyle = gradient;
         ctx.beginPath();
@@ -66,9 +66,9 @@ opacity: Math.random() * 0.3 + 0.6  // Changed from * 0.5 + 0.2
           const dy = particle.y - other.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 250) {  // Changed from 150
-            ctx.strokeStyle = `rgba(0, 0, 0, ${0.4 * (1 - distance / 250)})`;  // Changed from 0.15
-            ctx.lineWidth = 1.5;  // Changed from 0.5
+          if (distance < 150) {
+            ctx.strokeStyle = `rgba(134, 239, 172, ${0.15 * (1 - distance / 150)})`;
+            ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(other.x, other.y);
