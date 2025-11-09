@@ -69,7 +69,6 @@ def init_batch():
             longitude=batch_data['longitude'],
             previous_hash=previous_hash,
             current_hash=current_hash,
-            harvest_date=batch_data['harvest_date'],
             batch_id=new_batch.id # Connects block to batch
         )   
 
@@ -114,7 +113,7 @@ def transfer_batch():
             return jsonify({"error": "Chain is broken"}), 500
         
         if last_block.previous_hash == "0"*64:
-            genesis_data = f"{last_block.id}{last_block.actor_name}{last_block.harvest_date}"
+            genesis_data = f"{last_block.id}{last_block.actor_name}{batch.harvest_date}"
             current_hash = calculate_hash(data_to_hash=genesis_data,previous_hash="0"*64)
             if current_hash != last_block.current_hash:
                 return jsonify({"error": "Chain is broken"}), 500
