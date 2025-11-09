@@ -864,7 +864,7 @@ export function ProducerPortal({ setPage }) {
                 </>
               )}
 
-              {/* GPS Coordinates - Auto-detected */}
+              {/* GPS Coordinates - Auto-detected and Read-only */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ 
@@ -878,26 +878,25 @@ export function ProducerPortal({ setPage }) {
                     Latitude (Auto-detected)
                   </label>
                   <input
-                    type="text"
-                    name="latitude"
-                    value={formData.latitude}
-                    onChange={handleChange}
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      background: 'rgba(134, 239, 172, 0.1)',
-                      border: '2px solid rgba(134, 239, 172, 0.3)',
-                      borderRadius: '0.5rem',
-                      color: '#86efac',
-                      fontSize: '0.9375rem',
-                      fontWeight: '500',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                      letterSpacing: '0.01em'
-                    }}
-                  />
-                </div>
-                <div>
+                      type="text"
+                      name="latitude"
+                      value={formData.latitude}
+                      onChange={handleChange}
+                      placeholder="e.g., 40.818009"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        border: '2px solid rgba(134, 239, 172, 0.2)',
+                        color: 'white'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                        e.currentTarget.style.borderColor = '#86efac';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                        e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
+                      }}
+                    />
                   <label style={{
                     display: 'block',
                     marginBottom: '0.5rem',
@@ -910,25 +909,24 @@ export function ProducerPortal({ setPage }) {
                   </label>
                   <input
                     type="text"
-                    name="longitude"
-                    value={formData.longitude}
+                    name="latitude"
+                    value={formData.latitude}
                     onChange={handleChange}
+                    placeholder="e.g., 40.818009"
                     style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      background: 'rgba(134, 239, 172, 0.1)',
-                      border: '2px solid rgba(134, 239, 172, 0.3)',
-                      borderRadius: '0.5rem',
-                      color: '#86efac',
-                      fontSize: '0.9375rem',
-                      fontWeight: '500',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                      letterSpacing: '0.01em'
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      border: '2px solid rgba(134, 239, 172, 0.2)',
+                      color: 'white'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                      e.currentTarget.style.borderColor = '#86efac';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                      e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
                     }}
                   />
-                </div>
-              </div>
 
               <button
                 onClick={handleSubmit}

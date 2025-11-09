@@ -864,7 +864,7 @@ export function ProducerPortal({ setPage }) {
                 </>
               )}
 
-              {/* GPS Coordinates - Auto-detected */}
+              {/* GPS Coordinates - Auto-detected and Read-only */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ 
@@ -881,7 +881,7 @@ export function ProducerPortal({ setPage }) {
                     type="text"
                     name="latitude"
                     value={formData.latitude}
-                    onChange={handleChange}
+                    readOnly
                     style={{
                       width: '100%',
                       padding: '0.75rem 1rem',
@@ -893,7 +893,8 @@ export function ProducerPortal({ setPage }) {
                       fontWeight: '500',
                       outline: 'none',
                       boxSizing: 'border-box',
-                      letterSpacing: '0.01em'
+                      letterSpacing: '0.01em',
+                      cursor: 'not-allowed'
                     }}
                   />
                 </div>
@@ -912,7 +913,7 @@ export function ProducerPortal({ setPage }) {
                     type="text"
                     name="longitude"
                     value={formData.longitude}
-                    onChange={handleChange}
+                    readOnly
                     style={{
                       width: '100%',
                       padding: '0.75rem 1rem',
@@ -924,7 +925,8 @@ export function ProducerPortal({ setPage }) {
                       fontWeight: '500',
                       outline: 'none',
                       boxSizing: 'border-box',
-                      letterSpacing: '0.01em'
+                      letterSpacing: '0.01em',
+                      cursor: 'not-allowed'
                     }}
                   />
                 </div>
