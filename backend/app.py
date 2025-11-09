@@ -242,13 +242,9 @@ def get_audit_data(batch_uuid):
         blocks = db.query(LedgerBlock).filter(
             LedgerBlock.batch_id == batch.id
         ).order_by(LedgerBlock.id.asc()).all()
-
-        last_block = db.query(LedgerBlock).filter(
-            LedgerBlock.batch_id == batch.id
-        ).order_by(LedgerBlock.id.desc()).first()
         
         has_stable_table = haversine_audit_logic(blocks)
-        has_stable_chain = confirm_chain(last_block, batch)
+        has_stable_chain = confirm_chain(blocks, batch)
         
         # Make into front-end readable JSON
         warnings = []
@@ -273,6 +269,29 @@ def get_audit_data(batch_uuid):
 def download_file(filename):
     # This serves files from a new folder called 'qrcodes'
     return send_from_directory('qrcodes', filename, as_attachment=True)
+
+@app.route("/api/batch/hack", methods=["POST"])
+def hackdb():
+    id = request.get_data().decode('ascii')
+    db = next(get_db())
+    try:
+        batch = db.query(Batch).filter(Batch.batch_uuid == id).first()
+        led_batch = db.query(LedgerBlock).filter(
+            LedgerBlock.batch_id == batch.id
+        ).order_by(LedgerBlock.id.asc()).first()
+        
+        if not led_batch:
+            return jsonify({"error": "Batch not found"}), 404
+        
+        led_batch.actor_name = "Hacked"
+        db.commit() 
+        return jsonify({"message" : f"Batch {id} has been hacked (farm_name set to 'Hacked')"}), 200
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.close()
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
