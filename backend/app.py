@@ -54,7 +54,7 @@ def init_batch():
         # Create the first Block object in the chain
 
         genesis_data = f"{id}{batch_data['farm_name']}{batch_data['harvest_date']}"
-        previous_hash = "00000000000000000000000000000000" # since this is the first block, this is an empty hash
+        previous_hash = "0"*64 # since this is the first block, this is an empty hash
 
         current_hash = calculate_hash(
             data_to_hash=genesis_data,
