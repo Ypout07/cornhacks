@@ -124,7 +124,7 @@ def init_batch():
         })
     
     except Exception as e:
-        db.rollback() # If there is an error: UNDO!!  
+        db.rollback() # If there is an error: UNDO!!
         return jsonify({"error": str(e)}), 400
     finally:
         db.close() # Make sure to close up the database

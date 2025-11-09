@@ -75,7 +75,7 @@ def init_batch():
             longitude=batch_data['longitude'],
             previous_hash=previous_hash,
             current_hash=current_hash,
-            batch_id=new_batch.id, # Connects block to batch
+            batch_id=new_batch.id # Connects block to batch
             crate_id=None
         )   
 
@@ -124,7 +124,7 @@ def init_batch():
         })
     
     except Exception as e:
-        db.rollback() # If there is an error: UNDO!!  
+        db.rollback() # If there is an error: UNDO!!
         return jsonify({"error": str(e)}), 400
     finally:
         db.close() # Make sure to close up the database

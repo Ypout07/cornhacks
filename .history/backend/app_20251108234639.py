@@ -1,14 +1,9 @@
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import random
 from database import SessionLocal, Batch, LedgerBlock, create_db_and_tables
 from utils import calculate_hash, haversine_audit_logic, confirm_chain
-from datetime import datetime, timezone
-import os
-import io
-import qrcode
-from fpdf import FPDF
-
+import datetime
 
 # Inits
 app = Flask(__name__)
@@ -75,56 +70,19 @@ def init_batch():
             longitude=batch_data['longitude'],
             previous_hash=previous_hash,
             current_hash=current_hash,
-            batch_id=new_batch.id, # Connects block to batch
-            crate_id=None
+            batch_id=new_batch.id # Connects block to batch
         )   
 
         db.add(genesis_block)
-
-        pdf = FPDF()
-        crate_count = int(batch_data['crate_count'])
-        
-        # Create the 'qrcodes' directory if it doesn't exist
-        os.makedirs("qrcodes", exist_ok=True)
-
-        for i in range(1, crate_count + 1):
-            # Create the forked UUID
-            crate_uuid = f"{id}-CRATE_{i}"
-            
-            qr_img = qrcode.make(crate_uuid)
-            img_buffer = io.BytesIO()
-            qr_img.save(img_buffer, format='PNG')
-            img_buffer.seek(0)
-
-            pdf.add_page()
-            
-            pdf.image(img_buffer, x=55, y=30, w=100, type='PNG')
-            
-            # Add the text labels
-            pdf.set_font("Arial", size=16)
-            pdf.set_xy(0, 140) # Position for the text
-            pdf.cell(0, 10, txt=crate_uuid, ln=True, align='C')
-            
-            pdf.set_font("Arial", size=14)
-            pdf.cell(0, 10, txt=f"Crate {i} of {crate_count}", ln=True, align='C')
-
-        pdf_filename = f"{id}_qrcodes.pdf"
-        pdf_path = os.path.join("qrcodes", pdf_filename)
-        pdf.output(pdf_path)
-
-        # HARD CODED FOR LOCAL
-        pdf_url = f"http://127.0.0.1:5000/qrcodes/{pdf_filename}"
-
         db.commit()
 
         return jsonify({
             "message" : "Batch has been initialized",
-            "batch_uuid" : id,
-            "pdf_url": pdf_url
+            "batch_uuid" : id
         })
     
     except Exception as e:
-        db.rollback() # If there is an error: UNDO!!  
+        db.rollback() # If there is an error: UNDO!!
         return jsonify({"error": str(e)}), 400
     finally:
         db.close() # Make sure to close up the database
@@ -262,12 +220,6 @@ def get_audit_data(batch_uuid):
         return jsonify({"error": str(e)}), 400
     finally:
         db.close()
-
-# This route allows the frontend to download the generated files
-@app.route('/qrcodes/<path:filename>')
-def download_file(filename):
-    # This serves files from a new folder called 'qrcodes'
-    return send_from_directory('qrcodes', filename, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
