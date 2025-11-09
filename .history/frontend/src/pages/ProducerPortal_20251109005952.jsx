@@ -69,7 +69,6 @@ export function ProducerPortal({ setPage }) {
           longitude: parseFloat(formData.longitude),
           harvest_date: formData.harvest_date,
           quantity_kg: parseFloat(formData.quantity_kg),
-          crate_count: parseInt(formData.crate_count),
           grade: formData.grade,
           produce: formData.produce,
         };
@@ -348,7 +347,7 @@ export function ProducerPortal({ setPage }) {
             </div>
           )}
 
-          {/* PDF Download Link (CORRECTED) */}
+          {/* PDF Download Link */}
           {pdfUrl && (
             <div style={{
               marginBottom: '1.5rem',
@@ -362,19 +361,17 @@ export function ProducerPortal({ setPage }) {
               textAlign: 'center'
             }}>
               Download QR codes{' '}
-              <a 
+              
                 href={pdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
                   color: '#86efac',
-                _fontWeight: '600',
+                  fontWeight: '600',
                   textDecoration: 'underline',
                   cursor: 'pointer'
                 }}
-              >
                 here
-              </a>
             </div>
           )}
 

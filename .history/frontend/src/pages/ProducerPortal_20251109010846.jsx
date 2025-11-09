@@ -352,24 +352,26 @@ export function ProducerPortal({ setPage }) {
           {pdfUrl && (
             <div style={{
               marginBottom: '1.5rem',
-              padding: '1rem 1.25rem',
-              background: 'rgba(134, 239, 172, 0.1)',
-              border: '1px solid rgba(134, 239, 172, 0.3)',
-              borderRadius: '0.5rem',
-              color: '#d1fae5',
-              fontSize: '0.9375rem',
-              fontWeight: '400',
-              textAlign: 'center'
-            }}>
-              Download QR codes{' '}
-              <a 
-                href={pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  color: '#86efac',
-                _fontWeight: '600',
-                  textDecoration: 'underline',
+              padding: '1rem 1.25rem',
+              background: 'rgba(134, 239, 172, 0.1)',
+              border: '1px solid rgba(134, 239, 172, 0.3)',
+              borderRadius: '0.5rem',
+              color: '#d1fae5',
+              fontSize: '0.9375rem',
+              fontWeight: '400',
+              textAlign: 'center'
+            }}>
+              Download QR codes{' '}
+              
+              {/* --- THIS 'a' TAG IS THE FIX --- */}
+              <a 
+                href={pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: '#86efac',
+              _fontWeight: '600',
+                  textDecoration: 'underline',
                   cursor: 'pointer'
                 }}
               >
