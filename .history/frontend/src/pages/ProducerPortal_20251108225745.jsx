@@ -3,7 +3,9 @@
 // ============================================================================
 import { AlertCircle, ArrowLeft, CheckCircle, Package } from "lucide-react";
 import React, { useState } from "react";
+
 import { addTransfer, createBatch } from '../apiService';
+
 
 export function ProducerPortal({ setPage }) {
   const [mode, setMode] = useState("create");
@@ -12,7 +14,6 @@ export function ProducerPortal({ setPage }) {
     farm_name: "",
     harvest_date: "",
     quantity_kg: "",
-    crate_count: "",
     grade: "",
     produce: "",
     action: "harvest",
@@ -40,7 +41,7 @@ export function ProducerPortal({ setPage }) {
     setMessage(null);
 
     if (mode === "create") {
-      if (!formData.farm_name || !formData.harvest_date || !formData.quantity_kg || !formData.crate_count ||
+      if (!formData.farm_name || !formData.harvest_date || !formData.quantity_kg || 
           !formData.grade || !formData.produce || !formData.latitude || !formData.longitude) {
         setMessage({ type: "error", text: "Please fill in all fields" });
         return;
@@ -62,7 +63,6 @@ export function ProducerPortal({ setPage }) {
           longitude: parseFloat(formData.longitude),
           harvest_date: formData.harvest_date,
           quantity_kg: parseFloat(formData.quantity_kg),
-          crate_count: parseFloat(formData.crate_count),
           grade: formData.grade,
           produce: formData.produce,
         };
@@ -92,7 +92,6 @@ export function ProducerPortal({ setPage }) {
         farm_name: "",
         harvest_date: "",
         quantity_kg: "",
-        crate_count: "",
         grade: "",
         produce: "",
         action: mode === "create" ? "harvest" : "transfer",
@@ -120,8 +119,8 @@ export function ProducerPortal({ setPage }) {
       overflow: 'hidden',
       position: 'relative'
     }}>
-     {/* Header */}
-     <header style={{ 
+      {/* Header */}
+      <header style={{ 
         position: 'absolute', 
         top: 0, 
         left: 0, 
@@ -135,7 +134,7 @@ export function ProducerPortal({ setPage }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Package size={32} color="#86efac" strokeWidth={2} />
-          <span style={{ fontSize: '1.25rem', fontWeight: '600', color: 'white', letterSpacing: '0.05em' }}>BANANA BLOCKCHAIN</span>
+          <span style={{ fontSize: '1.25rem', fontWeight: '500', color: 'white', letterSpacing: '0.02em' }}>BANANA BLOCKCHAIN</span>
         </div>
         <button
           onClick={() => setPage('home')}
@@ -171,16 +170,15 @@ export function ProducerPortal({ setPage }) {
       {/* Main Content */}
       <div style={{ 
         position: 'absolute',
-        top: 0,
+        top: '5rem',
         left: 0,
         right: 0,
         bottom: 0,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'transparent',
-        overflow: 'auto',
-        paddingTop: '6rem',
+        background: 'linear-gradient(180deg, rgba(10, 31, 10, 0.95) 0%, rgba(10, 31, 10, 0) 100%)',
+        overflow: 'auto'
       }}>
         <div style={{
           position: 'absolute',
@@ -194,8 +192,7 @@ export function ProducerPortal({ setPage }) {
           position: 'relative',
           width: '100%',
           maxWidth: '700px',
-          zIndex: 1,
-          padding: '0 2rem'
+          zIndex: 1
         }}>
           {/* Title */}
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
@@ -474,7 +471,7 @@ export function ProducerPortal({ setPage }) {
                         type="number"
                         name="quantity_kg"
                         placeholder="e.g., 500"
-                        value={formData.quantity_kg}
+                        value={formData.quality_kg}
                         onChange={handleChange}
                         style={{
                           width: '100%',
@@ -596,37 +593,20 @@ export function ProducerPortal({ setPage }) {
                       fontWeight: '400',
                       letterSpacing: '0.01em'
                     }}>
-                      Crate Count
+                      Action
                     </label>
-                    <input
-                      type="number"
-                      name="crate_count"
-                      placeholder="e.g., 25"
-                      value={formData.crate_count}
-                      onChange={handleChange}
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem 1rem',
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        border: '2px solid rgba(134, 239, 172, 0.2)',
-                        borderRadius: '0.5rem',
-                        color: 'white',
-                        fontSize: '0.9375rem',
-                        fontWeight: '300',
-                        outline: 'none',
-                        transition: 'all 0.3s',
-                        boxSizing: 'border-box',
-                        letterSpacing: '0.01em'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-                        e.currentTarget.style.borderColor = '#86efac';
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                        e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
-                      }}
-                    />
+                    <div style={{
+                      padding: '0.75rem 1rem',
+                      background: 'rgba(134, 239, 172, 0.1)',
+                      border: '2px solid rgba(134, 239, 172, 0.3)',
+                      borderRadius: '0.5rem',
+                      color: '#86efac',
+                      fontSize: '0.9375rem',
+                      fontWeight: '400',
+                      letterSpacing: '0.01em'
+                    }}>
+                      Harvest (Default)
+                    </div>
                   </div>
                 </>
               )}
@@ -730,7 +710,7 @@ export function ProducerPortal({ setPage }) {
                 </>
               )}
 
-<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ 
                     display: 'block', 
@@ -853,5 +833,5 @@ export function ProducerPortal({ setPage }) {
         </div>
       </div>
     </div>
-  );
+);
 }

@@ -120,9 +120,9 @@ export function ProducerPortal({ setPage }) {
       overflow: 'hidden',
       position: 'relative'
     }}>
-     {/* Header */}
-     <header style={{ 
-        position: 'absolute', 
+      {/* Header */}
+      <header style={{ 
+        position: 'fixed',
         top: 0, 
         left: 0, 
         right: 0, 
@@ -130,12 +130,25 @@ export function ProducerPortal({ setPage }) {
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        zIndex: 10,
-        background: 'linear-gradient(180deg, rgba(10, 31, 10, 0.95) 0%, rgba(10, 31, 10, 0) 100%)'
+        zIndex: 20,
+        background: 'rgba(10, 31, 10, 0.95)',
+        backdropFilter: 'blur(6px)'
       }}>
+        {/* Top fade overlay */}
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '5rem',
+          zIndex: 15,
+          pointerEvents: 'none',
+          background: 'linear-gradient(180deg, #0a1f0a 0%, rgba(10,31,10,0) 100%)'
+        }} />
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Package size={32} color="#86efac" strokeWidth={2} />
-          <span style={{ fontSize: '1.25rem', fontWeight: '600', color: 'white', letterSpacing: '0.05em' }}>BANANA BLOCKCHAIN</span>
+          <span style={{ fontSize: '1.25rem', fontWeight: '500', color: 'white', letterSpacing: '0.02em' }}>BANANA BLOCKCHAIN</span>
         </div>
         <button
           onClick={() => setPage('home')}
