@@ -198,16 +198,19 @@ def get_audit_data(batch_uuid):
         last_block = db.query(LedgerBlock).filter(
             LedgerBlock.batch_id == batch.id
         ).order_by(LedgerBlock.id.desc()).first()
-
-        is_valid = haversine_audit_logic(blocks) and confirm_chain(last_block, batch)
+        
+        has_stable_table = haversine_audit_logic(blocks)
+        has_stable_chain = confirm_chain(last_block, batch)
         
         # Make into front-end readable JSON
-        if is_valid:
-            trust_score = "Verified"
-            warnings = []
-        else:
-            trust_score = "Verified with Warnings"
-            warnings = ["Suspicious travel detected in chain."]
+        warnings = []
+        trust_score = "Verified"
+        if not has_stable_chain:
+            trust_score = "Not Verified"
+            warnings.append("Block chain has been tampered.")
+        if not has_stable_table:
+            trust_score += " with Warnings"
+            warnings.append("Suspicious travel detected in chain.")
 
         return jsonify({"trust_score": trust_score, "warnings": warnings})
 
