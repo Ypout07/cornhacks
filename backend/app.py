@@ -113,9 +113,11 @@ def transfer_batch():
             return jsonify({"error": "Chain is broken"}), 500
         
         if last_block.previous_hash == "0"*64:
-            genesis_data = f"{last_block.id}{last_block.actor_name}{batch.harvest_date}"
+            genesis_data = f"{batch.batch_uuid}{last_block.actor_name}{batch.harvest_date}"
             current_hash = calculate_hash(data_to_hash=genesis_data,previous_hash="0"*64)
+            print(f"{genesis_data}\n")
             if current_hash != last_block.current_hash:
+                print(f"{current_hash}, {last_block.current_hash}")
                 return jsonify({"error": "Chain is broken"}), 500
         else:
             previous_hash = last_block.previous_hash
