@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import random
 from database import SessionLocal, Batch, LedgerBlock, create_db_and_tables
-from utils import calculate_hash, haversine_audit_logic
+from utils import calculate_hash, haversine_audit_logic, confirm_chain
 import datetime
 
 # Inits
@@ -108,36 +108,13 @@ def transfer_batch():
         if not last_block:
             # Ensures init_batch worked
             return jsonify({"error": "Genesis block missing, chain is broken"}), 500
-        
-        if len(last_block.previous_hash) != 64 or len(last_block.current_hash) != 64:
-            return jsonify({"error": "Chain is broken"}), 500
-        
-        if last_block.previous_hash == "0"*64:
-            genesis_data = f"{batch.batch_uuid}{last_block.actor_name}{batch.harvest_date}"
-            current_hash = calculate_hash(data_to_hash=genesis_data,previous_hash="0"*64)
-            print(f"{genesis_data}\n")
-            if current_hash != last_block.current_hash:
-                print(f"{current_hash}, {last_block.current_hash}")
-                return jsonify({"error": "Chain is broken"}), 500
-        else:
-            previous_hash = last_block.previous_hash
-            new_data_string = (
-            f"{last_block.actor_name}{last_block.action}"
-            f"{last_block.latitude}{last_block.longitude}"
-            )
-            current_hash = calculate_hash(
-                data_to_hash=new_data_string,
-                previous_hash=previous_hash
-            )
-            if current_hash != last_block.current_hash:
-                return jsonify({"error": "Chain is broken"}), 500
 
         previous_hash = last_block.current_hash
 
         # NEW hash from data
         new_data_string = (
             f"{transfer_data['actor_name']}{transfer_data['action']}"
-            f"{transfer_data['latitude']}{transfer_data['longitude']}"
+            f"{float(transfer_data['latitude'])}{float(transfer_data['longitude'])}"
         )
         
         current_hash = calculate_hash(
@@ -218,7 +195,11 @@ def get_audit_data(batch_uuid):
             LedgerBlock.batch_id == batch.id
         ).order_by(LedgerBlock.id.asc()).all()
 
-        is_valid = haversine_audit_logic(blocks)
+        last_block = db.query(LedgerBlock).filter(
+            LedgerBlock.batch_id == batch.id
+        ).order_by(LedgerBlock.id.desc()).first()
+
+        is_valid = haversine_audit_logic(blocks) and confirm_chain(last_block, batch)
         
         # Make into front-end readable JSON
         if is_valid:
