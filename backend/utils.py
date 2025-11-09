@@ -1,6 +1,7 @@
 from haversine import haversine
 import hashlib
 import json
+import datetime
 
 def calculate_hash(data_to_hash, previous_hash):
     # Calculates a SHA-256 hash for a new block
@@ -12,12 +13,15 @@ def calculate_hash(data_to_hash, previous_hash):
 
 def haversine_audit_logic(data):
     SPEED = 300 #Suspicion (km/hr)
-    location1 = (45.7597, 4.8422)
-    time1 = 1
-    for i in range(len(data)):
-        data[i]
-        location2 = (48.8567, 2.3508)
-        time2 = 0
-        if (time2 - time1) <= 0:
+    location1 = (data[0]["latitude"], data[0]["longitude"])
+    time1 = datetime.datetime.fromisoformat(data[0]["timestamp"])
+    for i in range(len(data)-1):
+        location2 = (data[i+1]["latitude"], data[i+1]["longitude"])
+        time2 = datetime.datetime.fromisoformat(data[i+1]["timestamp"])
+        if (time2 - time1).total_seconds() <= 0:
             return False
-        speed = haversine(location1, location2) / time2 - time1
+        time = (time2 - time1).total_seconds() / 3600
+        speed = haversine(location1, location2) / time
+        if speed > SPEED:
+            return False
+    return True

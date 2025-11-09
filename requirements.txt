@@ -1,3 +1,5 @@
 uvicorn
 flask
 haversine
+flask-cors
+database
