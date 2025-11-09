@@ -2,3 +2,5 @@ uvicorn
 flask
 haversine
 flask-cors
+sqlalchemy
+SQLAlchemy
