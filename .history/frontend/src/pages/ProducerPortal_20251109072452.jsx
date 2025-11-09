@@ -84,9 +84,9 @@ export function ProducerPortal({ setPage }) {
       const earthMaterial = new THREE.MeshPhongMaterial({
         map: earthTexture,
         shininess: 10,
-        opacity: 0.8,
+        opacity: 0.6,
         transparent: true,
-        color: 0x0a0a0a
+        color: 0x1a1a1a
       });
 
       const globe = new THREE.Mesh(geometry, earthMaterial);
@@ -107,7 +107,7 @@ export function ProducerPortal({ setPage }) {
           varying vec3 vNormal;
           void main() {
             float intensity = pow(0.6 - dot(vNormal, vec3(0, 0, 1.0)), 2.0);
-            gl_FragColor = vec4(0.1, 0.1, 0.1, 1.0) * intensity * 0.7;
+            gl_FragColor = vec4(0.2, 0.2, 0.2, 1.0) * intensity * 0.5;
           }
         `,
         blending: THREE.AdditiveBlending,
@@ -137,10 +137,10 @@ export function ProducerPortal({ setPage }) {
           console.log('GeoJSON loaded, rendering borders...');
           
           const borderMaterial = new THREE.LineBasicMaterial({
-            color: 0x000000,
+            color: 0x404040,
             transparent: true,
-            opacity: 0.8,
-            linewidth: 2
+            opacity: 0.25,
+            linewidth: 1
           });
 
           geojson.features.forEach(feature => {
@@ -396,7 +396,7 @@ export function ProducerPortal({ setPage }) {
           width: '100%',
           height: '100%',
           zIndex: 0,
-          opacity: 0.9
+          opacity: 0.7
         }}
       />
 

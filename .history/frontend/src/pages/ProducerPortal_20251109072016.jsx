@@ -84,9 +84,8 @@ export function ProducerPortal({ setPage }) {
       const earthMaterial = new THREE.MeshPhongMaterial({
         map: earthTexture,
         shininess: 10,
-        opacity: 0.8,
-        transparent: true,
-        color: 0x0a0a0a
+        opacity: 0.3,
+        transparent: true
       });
 
       const globe = new THREE.Mesh(geometry, earthMaterial);
@@ -107,7 +106,7 @@ export function ProducerPortal({ setPage }) {
           varying vec3 vNormal;
           void main() {
             float intensity = pow(0.6 - dot(vNormal, vec3(0, 0, 1.0)), 2.0);
-            gl_FragColor = vec4(0.1, 0.1, 0.1, 1.0) * intensity * 0.7;
+            gl_FragColor = vec4(0.53, 0.94, 0.67, 1.0) * intensity * 0.4;
           }
         `,
         blending: THREE.AdditiveBlending,
@@ -137,10 +136,10 @@ export function ProducerPortal({ setPage }) {
           console.log('GeoJSON loaded, rendering borders...');
           
           const borderMaterial = new THREE.LineBasicMaterial({
-            color: 0x000000,
+            color: 0x86efac,
             transparent: true,
-            opacity: 0.8,
-            linewidth: 2
+            opacity: 0.15,
+            linewidth: 1
           });
 
           geojson.features.forEach(feature => {
@@ -382,7 +381,7 @@ export function ProducerPortal({ setPage }) {
       height: '100vh',
       width: '100vw',
       color: 'white', 
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      fontFamily: "'Playfair Display', 'Georgia', serif",
       overflow: 'hidden',
       position: 'relative'
     }}>
@@ -396,7 +395,7 @@ export function ProducerPortal({ setPage }) {
           width: '100%',
           height: '100%',
           zIndex: 0,
-          opacity: 0.9
+          opacity: 0.4
         }}
       />
 
@@ -485,21 +484,23 @@ export function ProducerPortal({ setPage }) {
           {/* Title */}
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
             <h1 style={{ 
-              fontSize: '2.5rem', 
-              fontWeight: '300', 
+              fontSize: '3rem', 
+              fontWeight: '400', 
               marginBottom: '0.75rem',
               lineHeight: '1.2',
-              letterSpacing: '-0.01em',
-              color: 'white'
+              letterSpacing: '0.02em',
+              color: 'white',
+              fontStyle: 'italic'
             }}>
               Producer <span style={{ fontWeight: '600', color: '#86efac' }}>Portal</span>
             </h1>
             <p style={{ 
-              fontSize: '1rem', 
+              fontSize: '1.125rem', 
               color: '#d1fae5',
               fontWeight: '300',
               lineHeight: '1.6',
-              letterSpacing: '0.01em'
+              letterSpacing: '0.02em',
+              fontFamily: "'Crimson Text', 'Georgia', serif"
             }}>
               Create batches and record transfers in the supply chain
             </p>
@@ -522,16 +523,17 @@ export function ProducerPortal({ setPage }) {
                 });
               }}
               style={{
-                padding: '0.875rem',
+                padding: '1rem',
                 background: mode === "create" ? 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)' : 'rgba(255, 255, 255, 0.05)',
                 color: mode === "create" ? '#0a1f0a' : '#86efac',
                 border: mode === "create" ? 'none' : '2px solid rgba(134, 239, 172, 0.3)',
                 borderRadius: '0.5rem',
-                fontSize: '0.9375rem',
-                fontWeight: '600',
+                fontSize: '1.125rem',
+                fontWeight: '400',
                 cursor: 'pointer',
                 transition: 'all 0.3s',
-                letterSpacing: '0.01em'
+                letterSpacing: '0.02em',
+                fontStyle: 'italic'
               }}
               onMouseEnter={(e) => {
                 if (mode !== "create") {
@@ -558,16 +560,17 @@ export function ProducerPortal({ setPage }) {
                 });
               }}
               style={{
-                padding: '0.875rem',
+                padding: '1rem',
                 background: mode === "transfer" ? 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)' : 'rgba(255, 255, 255, 0.05)',
                 color: mode === "transfer" ? '#0a1f0a' : '#86efac',
                 border: mode === "transfer" ? 'none' : '2px solid rgba(134, 239, 172, 0.3)',
                 borderRadius: '0.5rem',
-                fontSize: '0.9375rem',
-                fontWeight: '600',
+                fontSize: '1.125rem',
+                fontWeight: '400',
                 cursor: 'pointer',
                 transition: 'all 0.3s',
-                letterSpacing: '0.01em'
+                letterSpacing: '0.02em',
+                fontStyle: 'italic'
               }}
               onMouseEnter={(e) => {
                 if (mode !== "transfer") {
@@ -598,9 +601,10 @@ export function ProducerPortal({ setPage }) {
               alignItems: 'center',
               gap: '0.75rem',
               color: message.type === 'success' ? '#86efac' : '#fca5a5',
-              fontSize: '0.9375rem',
+              fontSize: '1rem',
               fontWeight: '400',
-              backdropFilter: 'blur(10px)'
+              backdropFilter: 'blur(10px)',
+              fontFamily: "'Crimson Text', 'Georgia', serif"
             }}>
               {message.type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
               {message.text}
@@ -616,10 +620,11 @@ export function ProducerPortal({ setPage }) {
               border: '1px solid rgba(134, 239, 172, 0.4)',
               borderRadius: '0.5rem',
               color: '#d1fae5',
-              fontSize: '0.9375rem',
+              fontSize: '1rem',
               fontWeight: '400',
               textAlign: 'center',
-              backdropFilter: 'blur(10px)'
+              backdropFilter: 'blur(10px)',
+              fontFamily: "'Crimson Text', 'Georgia', serif"
             }}>
               Download QR codes{' '}
               <a
@@ -651,7 +656,7 @@ export function ProducerPortal({ setPage }) {
                     display: 'block', 
                     marginBottom: '0.5rem', 
                     color: '#d1fae5',
-                    fontSize: '0.9375rem',
+                    fontSize: '1rem',
                     fontWeight: '400',
                     letterSpacing: '0.02em'
                   }}>
@@ -665,17 +670,18 @@ export function ProducerPortal({ setPage }) {
                     onChange={handleChange}
                     style={{
                       width: '100%',
-                      padding: '0.75rem 1rem',
+                      padding: '0.875rem 1rem',
                       background: 'rgba(255, 255, 255, 0.08)',
                       border: '2px solid rgba(134, 239, 172, 0.2)',
                       borderRadius: '0.5rem',
                       color: 'white',
-                      fontSize: '0.9375rem',
+                      fontSize: '1rem',
                       fontWeight: '300',
                       outline: 'none',
                       transition: 'all 0.3s',
                       boxSizing: 'border-box',
-                      letterSpacing: '0.01em'
+                      letterSpacing: '0.01em',
+                      fontFamily: "'Crimson Text', 'Georgia', serif"
                     }}
                     onFocus={(e) => {
                       e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -696,7 +702,7 @@ export function ProducerPortal({ setPage }) {
                       display: 'block', 
                       marginBottom: '0.5rem', 
                       color: '#d1fae5',
-                      fontSize: '0.9375rem',
+                      fontSize: '1rem',
                       fontWeight: '400',
                       letterSpacing: '0.02em'
                     }}>
@@ -710,18 +716,18 @@ export function ProducerPortal({ setPage }) {
                       onChange={handleChange}
                       style={{
                         width: '100%',
-                        padding: '0.75rem 1rem',
+                        padding: '0.875rem 1rem',
                         background: 'rgba(255, 255, 255, 0.08)',
                         border: '2px solid rgba(134, 239, 172, 0.2)',
                         borderRadius: '0.5rem',
                         color: 'white',
-                        fontSize: '0.9375rem',
+                        fontSize: '1rem',
                         fontWeight: '300',
                         outline: 'none',
                         transition: 'all 0.3s',
                         boxSizing: 'border-box',
                         letterSpacing: '0.01em',
-                        
+                        fontFamily: "'Crimson Text', 'Georgia', serif"
                       }}
                       onFocus={(e) => {
                         e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -740,7 +746,7 @@ export function ProducerPortal({ setPage }) {
                         display: 'block', 
                         marginBottom: '0.5rem', 
                         color: '#d1fae5',
-                        fontSize: '0.9375rem',
+                        fontSize: '1rem',
                         fontWeight: '400',
                         letterSpacing: '0.02em'
                       }}>
@@ -753,19 +759,19 @@ export function ProducerPortal({ setPage }) {
                         onChange={handleChange}
                         style={{
                           width: '100%',
-                          padding: '0.75rem 1rem',
+                          padding: '0.875rem 1rem',
                           background: 'rgba(255, 255, 255, 0.08)',
                           border: '2px solid rgba(134, 239, 172, 0.2)',
                           borderRadius: '0.5rem',
                           color: 'white',
-                          fontSize: '0.9375rem',
+                          fontSize: '1rem',
                           fontWeight: '300',
                           outline: 'none',
                           transition: 'all 0.3s',
                           boxSizing: 'border-box',
                           letterSpacing: '0.01em',
                           colorScheme: 'dark',
-                          
+                          fontFamily: "'Crimson Text', 'Georgia', serif"
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -782,7 +788,7 @@ export function ProducerPortal({ setPage }) {
                         display: 'block', 
                         marginBottom: '0.5rem', 
                         color: '#d1fae5',
-                        fontSize: '0.9375rem',
+                        fontSize: '1rem',
                         fontWeight: '400',
                         letterSpacing: '0.02em'
                       }}>
@@ -796,18 +802,18 @@ export function ProducerPortal({ setPage }) {
                         onChange={handleChange}
                         style={{
                           width: '100%',
-                          padding: '0.75rem 1rem',
+                          padding: '0.875rem 1rem',
                           background: 'rgba(255, 255, 255, 0.08)',
                           border: '2px solid rgba(134, 239, 172, 0.2)',
                           borderRadius: '0.5rem',
                           color: 'white',
-                          fontSize: '0.9375rem',
+                          fontSize: '1rem',
                           fontWeight: '300',
                           outline: 'none',
                           transition: 'all 0.3s',
                           boxSizing: 'border-box',
                           letterSpacing: '0.01em',
-                          
+                          fontFamily: "'Crimson Text', 'Georgia', serif"
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -827,7 +833,7 @@ export function ProducerPortal({ setPage }) {
                         display: 'block', 
                         marginBottom: '0.5rem', 
                         color: '#d1fae5',
-                        fontSize: '0.9375rem',
+                        fontSize: '1rem',
                         fontWeight: '400',
                         letterSpacing: '0.02em'
                       }}>
@@ -841,18 +847,18 @@ export function ProducerPortal({ setPage }) {
                         onChange={handleChange}
                         style={{
                           width: '100%',
-                          padding: '0.75rem 1rem',
+                          padding: '0.875rem 1rem',
                           background: 'rgba(255, 255, 255, 0.08)',
                           border: '2px solid rgba(134, 239, 172, 0.2)',
                           borderRadius: '0.5rem',
                           color: 'white',
-                          fontSize: '0.9375rem',
+                          fontSize: '1rem',
                           fontWeight: '300',
                           outline: 'none',
                           transition: 'all 0.3s',
                           boxSizing: 'border-box',
                           letterSpacing: '0.01em',
-                          
+                          fontFamily: "'Crimson Text', 'Georgia', serif"
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -869,7 +875,7 @@ export function ProducerPortal({ setPage }) {
                         display: 'block', 
                         marginBottom: '0.5rem', 
                         color: '#d1fae5',
-                        fontSize: '0.9375rem',
+                        fontSize: '1rem',
                         fontWeight: '400',
                         letterSpacing: '0.02em'
                       }}>
@@ -883,18 +889,18 @@ export function ProducerPortal({ setPage }) {
                         onChange={handleChange}
                         style={{
                           width: '100%',
-                          padding: '0.75rem 1rem',
+                          padding: '0.875rem 1rem',
                           background: 'rgba(255, 255, 255, 0.08)',
                           border: '2px solid rgba(134, 239, 172, 0.2)',
                           borderRadius: '0.5rem',
                           color: 'white',
-                          fontSize: '0.9375rem',
+                          fontSize: '1rem',
                           fontWeight: '300',
                           outline: 'none',
                           transition: 'all 0.3s',
                           boxSizing: 'border-box',
                           letterSpacing: '0.01em',
-                          
+                          fontFamily: "'Crimson Text', 'Georgia', serif"
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -913,7 +919,7 @@ export function ProducerPortal({ setPage }) {
                       display: 'block', 
                       marginBottom: '0.5rem', 
                       color: '#d1fae5',
-                      fontSize: '0.9375rem',
+                      fontSize: '1rem',
                       fontWeight: '400',
                       letterSpacing: '0.02em'
                     }}>
@@ -927,18 +933,18 @@ export function ProducerPortal({ setPage }) {
                       onChange={handleChange}
                       style={{
                         width: '100%',
-                        padding: '0.75rem 1rem',
+                        padding: '0.875rem 1rem',
                         background: 'rgba(255, 255, 255, 0.08)',
                         border: '2px solid rgba(134, 239, 172, 0.2)',
                         borderRadius: '0.5rem',
                         color: 'white',
-                        fontSize: '0.9375rem',
+                        fontSize: '1rem',
                         fontWeight: '300',
                         outline: 'none',
                         transition: 'all 0.3s',
                         boxSizing: 'border-box',
                         letterSpacing: '0.01em',
-                        
+                        fontFamily: "'Crimson Text', 'Georgia', serif"
                       }}
                       onFocus={(e) => {
                         e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -960,7 +966,7 @@ export function ProducerPortal({ setPage }) {
                       display: 'block', 
                       marginBottom: '0.5rem', 
                       color: '#d1fae5',
-                      fontSize: '0.9375rem',
+                      fontSize: '1rem',
                       fontWeight: '400',
                       letterSpacing: '0.02em'
                     }}>
@@ -974,18 +980,18 @@ export function ProducerPortal({ setPage }) {
                       onChange={handleChange}
                       style={{
                         width: '100%',
-                        padding: '0.75rem 1rem',
+                        padding: '0.875rem 1rem',
                         background: 'rgba(255, 255, 255, 0.08)',
                         border: '2px solid rgba(134, 239, 172, 0.2)',
                         borderRadius: '0.5rem',
                         color: 'white',
-                        fontSize: '0.9375rem',
+                        fontSize: '1rem',
                         fontWeight: '300',
                         outline: 'none',
                         transition: 'all 0.3s',
                         boxSizing: 'border-box',
                         letterSpacing: '0.01em',
-                        
+                        fontFamily: "'Crimson Text', 'Georgia', serif"
                       }}
                       onFocus={(e) => {
                         e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -1003,7 +1009,7 @@ export function ProducerPortal({ setPage }) {
                       display: 'block', 
                       marginBottom: '0.5rem', 
                       color: '#d1fae5',
-                      fontSize: '0.9375rem',
+                      fontSize: '1rem',
                       fontWeight: '400',
                       letterSpacing: '0.02em'
                     }}>
@@ -1017,18 +1023,18 @@ export function ProducerPortal({ setPage }) {
                       onChange={handleChange}
                       style={{
                         width: '100%',
-                        padding: '0.75rem 1rem',
+                        padding: '0.875rem 1rem',
                         background: 'rgba(255, 255, 255, 0.08)',
                         border: '2px solid rgba(134, 239, 172, 0.2)',
                         borderRadius: '0.5rem',
                         color: 'white',
-                        fontSize: '0.9375rem',
+                        fontSize: '1rem',
                         fontWeight: '300',
                         outline: 'none',
                         transition: 'all 0.3s',
                         boxSizing: 'border-box',
                         letterSpacing: '0.01em',
-                        
+                        fontFamily: "'Crimson Text', 'Georgia', serif"
                       }}
                       onFocus={(e) => {
                         e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -1046,7 +1052,7 @@ export function ProducerPortal({ setPage }) {
                       display: 'block', 
                       marginBottom: '0.75rem', 
                       color: '#d1fae5',
-                      fontSize: '0.9375rem',
+                      fontSize: '1rem',
                       fontWeight: '400',
                       letterSpacing: '0.02em'
                     }}>
@@ -1063,12 +1069,12 @@ export function ProducerPortal({ setPage }) {
                           border: `2px solid ${formData.action === 'transfer' ? '#86efac' : 'rgba(134, 239, 172, 0.2)'}`,
                           borderRadius: '0.5rem',
                           color: formData.action === 'transfer' ? '#86efac' : '#a7f3d0',
-                          fontSize: '0.9375rem',
+                          fontSize: '1rem',
                           fontWeight: '400',
                           cursor: 'pointer',
                           transition: 'all 0.3s',
                           letterSpacing: '0.01em',
-                          
+                          fontFamily: "'Crimson Text', 'Georgia', serif"
                         }}
                       >
                         Arrived At Warehouse
@@ -1083,12 +1089,12 @@ export function ProducerPortal({ setPage }) {
                           border: `2px solid ${formData.action === 'store' ? '#86efac' : 'rgba(134, 239, 172, 0.2)'}`,
                           borderRadius: '0.5rem',
                           color: formData.action === 'store' ? '#86efac' : '#a7f3d0',
-                          fontSize: '0.9375rem',
+                          fontSize: '1rem',
                           fontWeight: '400',
                           cursor: 'pointer',
                           transition: 'all 0.3s',
                           letterSpacing: '0.01em',
-                          
+                          fontFamily: "'Crimson Text', 'Georgia', serif"
                         }}
                       >
                         Arrived At Store
@@ -1105,7 +1111,7 @@ export function ProducerPortal({ setPage }) {
                     display: 'block', 
                     marginBottom: '0.5rem', 
                     color: '#d1fae5',
-                    fontSize: '0.9375rem',
+                    fontSize: '1rem',
                     fontWeight: '400',
                     letterSpacing: '0.02em'
                   }}>
@@ -1118,17 +1124,17 @@ export function ProducerPortal({ setPage }) {
                     onChange={handleChange}
                     style={{
                       width: '100%',
-                      padding: '0.75rem 1rem',
+                      padding: '0.875rem 1rem',
                       background: 'rgba(134, 239, 172, 0.1)',
                       border: '2px solid rgba(134, 239, 172, 0.3)',
                       borderRadius: '0.5rem',
                       color: '#86efac',
-                      fontSize: '0.9375rem',
+                      fontSize: '1rem',
                       fontWeight: '500',
                       outline: 'none',
                       boxSizing: 'border-box',
                       letterSpacing: '0.01em',
-                      
+                      fontFamily: "'Crimson Text', 'Georgia', serif"
                     }}
                   />
                 </div>
@@ -1137,7 +1143,7 @@ export function ProducerPortal({ setPage }) {
                     display: 'block',
                     marginBottom: '0.5rem',
                     color: '#d1fae5',
-                    fontSize: '0.9375rem',
+                    fontSize: '1rem',
                     fontWeight: '400',
                     letterSpacing: '0.02em'
                   }}>
@@ -1150,17 +1156,17 @@ export function ProducerPortal({ setPage }) {
                     onChange={handleChange}
                     style={{
                       width: '100%',
-                      padding: '0.75rem 1rem',
+                      padding: '0.875rem 1rem',
                       background: 'rgba(134, 239, 172, 0.1)',
                       border: '2px solid rgba(134, 239, 172, 0.3)',
                       borderRadius: '0.5rem',
                       color: '#86efac',
-                      fontSize: '0.9375rem',
+                      fontSize: '1rem',
                       fontWeight: '500',
                       outline: 'none',
                       boxSizing: 'border-box',
                       letterSpacing: '0.01em',
-                      
+                      fontFamily: "'Crimson Text', 'Georgia', serif"
                     }}
                   />
                 </div>
@@ -1172,19 +1178,20 @@ export function ProducerPortal({ setPage }) {
                 style={{
                   marginTop: '1rem',
                   width: '100%',
-                  padding: '1rem',
+                  padding: '1.125rem',
                   background: loading
                     ? 'rgba(134, 239, 172, 0.3)'
                     : 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
                   color: '#0a1f0a',
                   border: 'none',
                   borderRadius: '0.5rem',
-                  fontSize: '1.125rem',
-                  fontWeight: '600',
+                  fontSize: '1.25rem',
+                  fontWeight: '400',
                   cursor: loading ? 'not-allowed' : 'pointer',
                   transition: 'all 0.3s',
-                  letterSpacing: '0.01em',
-                  boxShadow: loading ? 'none' : '0 4px 20px rgba(134, 239, 172, 0.3)'
+                  letterSpacing: '0.02em',
+                  boxShadow: loading ? 'none' : '0 4px 20px rgba(134, 239, 172, 0.3)',
+                  fontStyle: 'italic'
                 }}
                 onMouseEnter={(e) => {
                   if (!loading) {
