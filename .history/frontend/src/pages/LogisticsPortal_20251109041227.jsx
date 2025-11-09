@@ -117,7 +117,7 @@ export function LogisticsPortal({ setPage }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
-
+  
   const handleSearch = async () => {
     if (!batchUuid.trim()) {
       setError('Please enter a batch UUID');
@@ -145,17 +145,6 @@ export function LogisticsPortal({ setPage }) {
     }
   };
 
-  // Close menu when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuOpen && !event.target.closest('.dropdown-menu')) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [menuOpen]);
-
   return (
     <div style={{ background: '#0a1f0a', minHeight: '100vh', height: '100vh', width: '100vw', color: 'white', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", overflow: 'auto' }}>
       {/* Header */}
@@ -172,7 +161,7 @@ export function LogisticsPortal({ setPage }) {
         background: 'linear-gradient(180deg, rgba(10, 31, 10, 0.95) 0%, rgba(10, 31, 10, 0) 100%)'
       }}>
         <div 
-          onClick={() => setPage('home')}
+          onClick={() => setPage('about')}
           style={{ 
             display: 'flex', 
             alignItems: 'center', 
@@ -189,147 +178,6 @@ export function LogisticsPortal({ setPage }) {
         >
           <Package size={32} color="#86efac" strokeWidth={2} />
           <span style={{ fontSize: '1.25rem', fontWeight: '600', color: 'white', letterSpacing: '0.05em' }}>BANANA BLOCKCHAIN</span>
-        </div>
-
-        {/* Dropdown Menu */}
-        <div style={{ position: 'relative' }} className="dropdown-menu">
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            style={{
-              background: 'none',
-              border: '2px solid rgba(134, 239, 172, 0.3)',
-              color: '#86efac',
-              padding: '0.5rem 1.25rem',
-              borderRadius: '0.5rem',
-              fontSize: '0.875rem',
-              fontWeight: '500',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              transition: 'all 0.3s',
-              letterSpacing: '0.01em'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#86efac';
-              e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.3)';
-              e.currentTarget.style.background = 'none';
-            }}
-          >
-            Menu
-            <span style={{ 
-              fontSize: '0.7rem',
-              transition: 'transform 0.3s',
-              transform: menuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-              display: 'inline-block'
-            }}>▼</span>
-          </button>
-
-          {menuOpen && (
-            <div style={{
-              position: 'absolute',
-              top: 'calc(100% + 0.5rem)',
-              right: 0,
-              background: 'rgba(10, 31, 10, 0.98)',
-              border: '1px solid rgba(134, 239, 172, 0.3)',
-              borderRadius: '0.5rem',
-              minWidth: '180px',
-              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
-              backdropFilter: 'blur(10px)',
-              overflow: 'hidden',
-              zIndex: 100
-            }}>
-              <button
-                onClick={() => {
-                  setPage('about');
-                  setMenuOpen(false);
-                }}
-                style={{
-                  width: '100%',
-                  padding: '0.875rem 1.25rem',
-                  background: 'none',
-                  border: 'none',
-                  color: '#d1fae5',
-                  fontSize: '0.9375rem',
-                  fontWeight: '500',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  borderBottom: '1px solid rgba(134, 239, 172, 0.1)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-                  e.currentTarget.style.color = '#86efac';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = '#d1fae5';
-                }}
-              >
-                About
-              </button>
-              <button
-                onClick={() => {
-                  setPage('process');
-                  setMenuOpen(false);
-                }}
-                style={{
-                  width: '100%',
-                  padding: '0.875rem 1.25rem',
-                  background: 'none',
-                  border: 'none',
-                  color: '#d1fae5',
-                  fontSize: '0.9375rem',
-                  fontWeight: '500',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  borderBottom: '1px solid rgba(134, 239, 172, 0.1)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-                  e.currentTarget.style.color = '#86efac';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = '#d1fae5';
-                }}
-              >
-                Process
-              </button>
-              <button
-                onClick={() => {
-                  setPage('producer');
-                  setMenuOpen(false);
-                }}
-                style={{
-                  width: '100%',
-                  padding: '0.875rem 1.25rem',
-                  background: 'none',
-                  border: 'none',
-                  color: '#d1fae5',
-                  fontSize: '0.9375rem',
-                  fontWeight: '500',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-                  e.currentTarget.style.color = '#86efac';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = '#d1fae5';
-                }}
-              >
-                Producer Portal
-              </button>
-            </div>
-          )}
         </div>
       </header>
 
@@ -642,49 +490,243 @@ export function LogisticsPortal({ setPage }) {
           </h2>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem' }}>
-            {[
-              { num: 1, title: 'Register the Farm', desc: 'Producers create verified farm profiles, linking their identity and operations to the blockchain for trusted traceability.' },
-              { num: 2, title: 'Create Batch', desc: 'New batches are logged with key details like harvest date and location, giving each product a unique digital identity.' },
-              { num: 3, title: 'Quality & Certification', desc: 'Producers attach inspection results and certifications to each batch, ensuring every claim is verifiable and transparent.' },
-              { num: 4, title: 'Record Transfers', desc: 'Every handoff in the supply chain is recorded and verified, creating a tamper-proof chain of custody from start to finish.' },
-              { num: 5, title: 'Real-Time Tracking', desc: 'GPS data and timestamps update automatically, allowing everyone to monitor shipments and conditions in real time.' },
-              { num: 6, title: 'Retail Verification', desc: 'Retailers instantly confirm product authenticity and sourcing by scanning the blockchain record upon delivery.' },
-              { num: 7, title: 'Track & Verify', desc: 'Consumers scan a code to view the produce\'s complete verified journey, building confidence in its freshness and origin.' }
-            ].map(step => (
-              <div 
-                key={step.num}
-                onClick={() => setPage('steps', null, null, step.num)}
-                style={{ textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                <div style={{ 
-                  width: '80px', 
-                  height: '80px', 
-                  background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 1.5rem',
-                  fontSize: '2rem',
-                  fontWeight: '600',
-                  color: '#0a1f0a',
-                  transition: 'all 0.3s',
-                  boxShadow: '0 4px 20px rgba(134, 239, 172, 0.3)'
-                }}>
-                  {step.num}
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>{step.title}</h3>
-                <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
-                  {step.desc}
-                </p>
+            {/* Step 1 */}
+            <div 
+              onClick={() => setPage('steps', null, null, 1)}
+              style={{ textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{ 
+                width: '80px', 
+                height: '80px', 
+                background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem',
+                fontSize: '2rem',
+                fontWeight: '600',
+                color: '#0a1f0a',
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 20px rgba(134, 239, 172, 0.3)'
+              }}>
+                1
               </div>
-            ))}
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Register the Farm</h3>
+              <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
+                Producers create verified farm profiles, linking their identity and operations to the blockchain for trusted traceability.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div 
+              onClick={() => setPage('steps', null, null, 2)}
+              style={{ textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{ 
+                width: '80px', 
+                height: '80px', 
+                background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem',
+                fontSize: '2rem',
+                fontWeight: '600',
+                color: '#0a1f0a',
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 20px rgba(134, 239, 172, 0.3)'
+              }}>
+                2
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Create Batch</h3>
+              <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
+                New batches are logged with key details like harvest date and location, giving each product a unique digital identity.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div 
+              onClick={() => setPage('steps', null, null, 3)}
+              style={{ textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{ 
+                width: '80px', 
+                height: '80px', 
+                background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem',
+                fontSize: '2rem',
+                fontWeight: '600',
+                color: '#0a1f0a',
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 20px rgba(134, 239, 172, 0.3)'
+              }}>
+                3
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Quality & Certification</h3>
+              <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
+                Producers attach inspection results and certifications to each batch, ensuring every claim is verifiable and transparent.
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div 
+              onClick={() => setPage('steps', null, null, 4)}
+              style={{ textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{ 
+                width: '80px', 
+                height: '80px', 
+                background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem',
+                fontSize: '2rem',
+                fontWeight: '600',
+                color: '#0a1f0a',
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 20px rgba(134, 239, 172, 0.3)'
+              }}>
+                4
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Record Transfers</h3>
+              <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
+                Every handoff in the supply chain is recorded and verified, creating a tamper-proof chain of custody from start to finish.
+              </p>
+            </div>
+
+            {/* Step 5 */}
+            <div 
+              onClick={() => setPage('steps', null, null, 5)}
+              style={{ textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{ 
+                width: '80px', 
+                height: '80px', 
+                background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem',
+                fontSize: '2rem',
+                fontWeight: '600',
+                color: '#0a1f0a',
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 20px rgba(134, 239, 172, 0.3)'
+              }}>
+                5
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Real-Time Tracking</h3>
+              <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
+                GPS data and timestamps update automatically, allowing everyone to monitor shipments and conditions in real time.
+              </p>
+            </div>
+
+            {/* Step 6 */}
+            <div 
+              onClick={() => setPage('steps', null, null, 6)}
+              style={{ textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{ 
+                width: '80px', 
+                height: '80px', 
+                background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem',
+                fontSize: '2rem',
+                fontWeight: '600',
+                color: '#0a1f0a',
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 20px rgba(134, 239, 172, 0.3)'
+              }}>
+                6
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Retail Verification</h3>
+              <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
+                Retailers instantly confirm product authenticity and sourcing by scanning the blockchain record upon delivery.
+              </p>
+            </div>
+
+            {/* Step 7 */}
+            <div 
+              onClick={() => setPage('steps', null, null, 7)}
+              style={{ textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{ 
+                width: '80px', 
+                height: '80px', 
+                background: 'linear-gradient(135deg, #86efac 0%, #4ade80 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem',
+                fontSize: '2rem',
+                fontWeight: '600',
+                color: '#0a1f0a',
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 20px rgba(134, 239, 172, 0.3)'
+              }}>
+                7
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Track & Verify</h3>
+              <p style={{ fontSize: '0.9375rem', color: '#a7f3d0', lineHeight: '1.5', fontWeight: '300' }}>
+                Consumers scan a code to view the produce's complete verified journey, building confidence in its freshness and origin.
+              </p>
+            </div>
           </div>
         </div>
       </section>
