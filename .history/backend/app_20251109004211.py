@@ -73,7 +73,7 @@ def init_batch():
         genesis_block = LedgerBlock(
             actor_name=batch_data['farm_name'],
             action="Harvested",
-            timestamp=datetime.now(timezone.utc),
+            timestamp=datetime.datetime.utcnow(),
             latitude=batch_data['latitude'],
             longitude=batch_data['longitude'],
             previous_hash=previous_hash,
@@ -174,7 +174,7 @@ def transfer_batch():
         new_block = LedgerBlock(
             actor_name=transfer_data['actor_name'],
             action=transfer_data['action'],
-            timestamp=datetime.now(timezone.utc),
+            timestamp=datetime.datetime.utcnow(),
             latitude=transfer_data['latitude'],
             longitude=transfer_data['longitude'],
             previous_hash=previous_hash, 

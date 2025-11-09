@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 import os
 import io
 import qrcode
-from fpdf import FPDF
+from fpdf2 import FPDF
 import traceback
 
 
