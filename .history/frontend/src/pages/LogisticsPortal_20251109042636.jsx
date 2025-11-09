@@ -7,7 +7,7 @@ import { getCrateHistory, getBatchHistoryAudit } from '../apiService';
 
 // Animated Map Background Component
 function AnimatedMapBackground() {
-  const canvasRef = React.useRef(null); 
+  const canvasRef = React.useRef(null);
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
