@@ -450,13 +450,13 @@ export function ProducerPortal({ setPage }) {
                         fontWeight: '400',
                         letterSpacing: '0.01em'
                       }}>
-                        Quantity (kg)
+                        Quality (kg)
                       </label>
                       <input
                         type="number"
-                        name="quantity_kg"
+                        name="quality_kg"
                         placeholder="e.g., 500"
-                        value={formData.quantity_kg}
+                        value={formData.quality_kg}
                         onChange={handleChange}
                         style={{
                           width: '100%',
