@@ -40,6 +40,8 @@ class LedgerBlock(Base):
     
     latitude = Column(Float)
     longitude = Column(Float)
+
+    harvest_date = Column(String)
     
     previous_hash = Column(Text, nullable=True) # Null only for the genesis block
     current_hash = Column(Text, unique=True, nullable=False)
