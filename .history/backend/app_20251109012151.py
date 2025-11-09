@@ -151,7 +151,7 @@ def transfer_batch():
         # Finds last block in the chain
         last_block = db.query(LedgerBlock).filter(
             LedgerBlock.batch_id == batch.id
-        ).order_by(LedgerBlock.id.desc()).first()
+        ).order_by(LedgerBlock.id.desc()).all()
 
         if not last_block:
             # Ensures init_batch worked
@@ -245,7 +245,7 @@ def get_audit_data(batch_uuid):
 
         last_block = db.query(LedgerBlock).filter(
             LedgerBlock.batch_id == batch.id
-        ).order_by(LedgerBlock.id.desc()).all()
+        ).order_by(LedgerBlock.id.desc()).first()
         
         has_stable_table = haversine_audit_logic(blocks)
         has_stable_chain = confirm_chain(last_block, batch)
