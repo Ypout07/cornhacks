@@ -31,7 +31,7 @@ def get_db():
 
 @app.route("/")
 def home():
-    return jsonify({"message" : "LMAO OK"})
+    return jsonify({"message" : "Welcome to Banana Blockchain"})
 
 @app.route("/api/batch", methods=["POST"])
 def init_batch():
@@ -283,10 +283,6 @@ def get_audit_data(batch_uuid):
         blocks = db.query(LedgerBlock).filter(
             LedgerBlock.batch_id == batch.id
         ).order_by(LedgerBlock.id.asc()).all()
-
-        last_block = db.query(LedgerBlock).filter(
-            LedgerBlock.batch_id == batch.id
-        ).order_by(LedgerBlock.id.desc()).all()
         
         has_stable_table = haversine_audit_logic(blocks)
         has_stable_chain = confirm_chain(blocks, batch)
