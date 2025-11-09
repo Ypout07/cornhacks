@@ -24,33 +24,6 @@ export function ProducerPortal({ setPage }) {
   const [loading, setLoading] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null);
 
-  // Automatically get GPS location on mount
-  React.useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setFormData(prev => ({
-            ...prev,
-            latitude: position.coords.latitude.toFixed(6),
-            longitude: position.coords.longitude.toFixed(6)
-          }));
-        },
-        (error) => {
-          console.error('GPS Error:', error);
-          setMessage({ 
-            type: 'error', 
-            text: 'Unable to get your location. Please enable location services in your browser.' 
-          });
-        }
-      );
-    } else {
-      setMessage({ 
-        type: 'error', 
-        text: 'Geolocation is not supported by your browser.' 
-      });
-    }
-  }, []);
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -76,16 +49,13 @@ export function ProducerPortal({ setPage }) {
         return;
       }
     } else {
-      if (!formData.batch_uuid || !formData.farm_name || !formData.crate_number || !formData.action || !formData.latitude || !formData.longitude) {
+      if (!formData.batch_uuid || !formData.farm_name || !formData.action || !formData.latitude || !formData.longitude) {
         setMessage({ type: "error", text: "Please fill in all fields" });
         return;
       }
     }
 
     setLoading(true);
-    
-    let result = null; 
-    
     try {
       if (mode === "create") {
         const data = {
@@ -100,9 +70,7 @@ export function ProducerPortal({ setPage }) {
           grade: formData.grade,
           produce: formData.produce,
         };
-
-        result = await createBatch(data); 
-        console.log("CREATED BATCH WITH ID:", result.batch_uuid);
+        const result = await createBatch(data);
         setMessage({
           type: "success",
           text: `Batch created successfully! ID: ${result.batch_uuid}`,
@@ -123,36 +91,20 @@ export function ProducerPortal({ setPage }) {
         });
       }
       
-      if (mode === "create") {
-        setFormData({
-          batch_uuid: "",
-          farm_name: "",
-          harvest_date: "",
-          quantity_kg: "",
-          crate_count: "",
-          crate_number: "",
-          grade: "",
-          produce: "",
-          action: "harvest",
-          latitude: "",
-          longitude: "",
-        });
-      } else {
-        setFormData({
-          batch_uuid: "",
-          farm_name: "",
-          harvest_date: "",
-          quantity_kg: "",
-          crate_count: "",
-          crate_number: "",
-          grade: "",
-          produce: "",
-          action: "harvest", 
-          latitude: "",
-          longitude: "",
-        });
-        setMode("create");
-      }
+      // Clear form on success
+      setFormData({
+        batch_uuid: "",
+        farm_name: "",
+        harvest_date: "",
+        quantity_kg: "",
+        crate_count: "",
+        crate_number: "",
+        grade: "",
+        produce: "",
+        action: mode === "create" ? "harvest" : "transfer",
+        latitude: "",
+        longitude: "",
+      });
     } catch (error) {
       console.error(error);
       setMessage({
@@ -174,8 +126,8 @@ export function ProducerPortal({ setPage }) {
       overflow: 'hidden',
       position: 'relative'
     }}>
-     {/* Header */}
-     <header style={{ 
+      {/* Header */}
+      <header style={{ 
         position: 'absolute', 
         top: 0, 
         left: 0, 
@@ -187,16 +139,31 @@ export function ProducerPortal({ setPage }) {
         zIndex: 10,
         background: 'linear-gradient(180deg, rgba(10, 31, 10, 0.95) 0%, rgba(10, 31, 10, 0) 100%)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div 
+          onClick={() => setPage('about')}
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.75rem',
+            cursor: 'pointer',
+            transition: 'all 0.3s'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.opacity = '0.8';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = '1';
+          }}
+        >
           <Package size={32} color="#86efac" strokeWidth={2} />
           <span style={{ fontSize: '1.25rem', fontWeight: '600', color: 'white', letterSpacing: '0.05em' }}>BANANA BLOCKCHAIN</span>
         </div>
         <button
           onClick={() => setPage('home')}
           style={{
-            background: 'transparent',
+            background: 'none',
             border: '2px solid rgba(134, 239, 172, 0.3)',
-            color: 'white',
+            color: '#86efac',
             padding: '0.5rem 1.25rem',
             borderRadius: '0.5rem',
             fontSize: '0.875rem',
@@ -211,12 +178,10 @@ export function ProducerPortal({ setPage }) {
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = '#86efac';
             e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.3)';
-            e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.background = 'none';
           }}
         >
           <ArrowLeft size={16} strokeWidth={2} />
@@ -533,8 +498,7 @@ export function ProducerPortal({ setPage }) {
                           outline: 'none',
                           transition: 'all 0.3s',
                           boxSizing: 'border-box',
-                          letterSpacing: '0.01em',
-                          colorScheme: 'dark'
+                          letterSpacing: '0.01em'
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -674,6 +638,7 @@ export function ProducerPortal({ setPage }) {
                     </div>
                   </div>
 
+                  {/* Crate Count and Crate Number side by side */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
                       <label style={{ 
@@ -716,6 +681,48 @@ export function ProducerPortal({ setPage }) {
                         }}
                       />
                     </div>
+                    
+                    <div>
+                      <label style={{ 
+                        display: 'block', 
+                        marginBottom: '0.5rem', 
+                        color: '#d1fae5',
+                        fontSize: '0.875rem',
+                        fontWeight: '400',
+                        letterSpacing: '0.01em'
+                      }}>
+                        Crate Number
+                      </label>
+                      <input
+                        type="text"
+                        name="crate_number"
+                        placeholder="e.g., CRATE-001"
+                        value={formData.crate_number}
+                        onChange={handleChange}
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem 1rem',
+                          background: 'rgba(255, 255, 255, 0.08)',
+                          border: '2px solid rgba(134, 239, 172, 0.2)',
+                          borderRadius: '0.5rem',
+                          color: 'white',
+                          fontSize: '0.9375rem',
+                          fontWeight: '300',
+                          outline: 'none',
+                          transition: 'all 0.3s',
+                          boxSizing: 'border-box',
+                          letterSpacing: '0.01em'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                          e.currentTarget.style.borderColor = '#86efac';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                          e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
+                        }}
+                      />
+                    </div>
                   </div>
                 </>
               )}
@@ -723,6 +730,7 @@ export function ProducerPortal({ setPage }) {
               {mode === "transfer" && (
                 <>
                   <div>
+                    
                     <label style={{ 
                       display: 'block', 
                       marginBottom: '0.5rem', 
@@ -731,7 +739,7 @@ export function ProducerPortal({ setPage }) {
                       fontWeight: '400',
                       letterSpacing: '0.01em'
                     }}>
-                      Company Name
+                      Actor Name
                     </label>
                     <input
                       type="text"
@@ -751,183 +759,11 @@ export function ProducerPortal({ setPage }) {
                         outline: 'none',
                         transition: 'all 0.3s',
                         boxSizing: 'border-box',
-                        letterSpacing: '0.01em'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-                        e.currentTarget.style.borderColor = '#86efac';
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                        e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '0.5rem', 
-                      color: '#d1fae5',
-                      fontSize: '0.875rem',
-                      fontWeight: '400',
-                      letterSpacing: '0.01em'
-                    }}>
-                      Crate Number
-                    </label>
-                    <input
-                      type="text"
-                      name="crate_number"
-                      placeholder="e.g. 1, 2, 5-10"
-                      value={formData.crate_number}
-                      onChange={handleChange}
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem 1rem',
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        border: '2px solid rgba(134, 239, 172, 0.2)',
-                        borderRadius: '0.5rem',
-                        color: 'white',
-                        fontSize: '0.9375rem',
-                        fontWeight: '300',
-                        outline: 'none',
-                        transition: 'all 0.3s',
-                        boxSizing: 'border-box',
-                        letterSpacing: '0.01em'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-                        e.currentTarget.style.borderColor = '#86efac';
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                        e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '0.75rem', 
-                      color: '#d1fae5',
-                      fontSize: '0.875rem',
-                      fontWeight: '400',
-                      letterSpacing: '0.01em'
-                    }}>
-                      Action Type
-                    </label>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                      <button
-                        type="button"
-                        onClick={() => handleActionChange('Arrived At Warehouse')}
-                        style={{
-                          flex: 1,
-                          padding: '0.75rem',
-                          background: formData.action === 'transfer' ? 'rgba(134, 239, 172, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                          border: `2px solid ${formData.action === 'transfer' ? '#86efac' : 'rgba(134, 239, 172, 0.2)'}`,
-                          borderRadius: '0.5rem',
-                          color: formData.action === 'transfer' ? '#86efac' : '#a7f3d0',
-                          fontSize: '0.9375rem',
-                          fontWeight: '400',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s',
-                          letterSpacing: '0.01em'
-                        }}
-                      >
-                        Arrived At Warehouse
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleActionChange('store')}
-                        style={{
-                          flex: 1,
-                          padding: '0.75rem',
-                          background: formData.action === 'store' ? 'rgba(134, 239, 172, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                          border: `2px solid ${formData.action === 'store' ? '#86efac' : 'rgba(134, 239, 172, 0.2)'}`,
-                          borderRadius: '0.5rem',
-                          color: formData.action === 'store' ? '#86efac' : '#a7f3d0',
-                          fontSize: '0.9375rem',
-                          fontWeight: '400',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s',
-                          letterSpacing: '0.01em'
-                        }}
-                      >
-                        Arrived At Store
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {/* GPS Coordinates - Auto-detected and Read-only */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div>
-                  <label style={{ 
-                    display: 'block', 
-                    marginBottom: '0.5rem', 
-                    color: '#d1fae5',
-                    fontSize: '0.875rem',
-                    fontWeight: '400',
-                    letterSpacing: '0.01em'
-                  }}>
-                    Latitude (Auto-detected)
-                  </label>
-                  <input
-                    type="text"
-                    name="latitude"
-                    value={formData.latitude}
-                    readOnly
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      background: 'rgba(134, 239, 172, 0.1)',
-                      border: '2px solid rgba(134, 239, 172, 0.3)',
-                      borderRadius: '0.5rem',
-                      color: '#86efac',
-                      fontSize: '0.9375rem',
-                      fontWeight: '500',
-                      outline: 'none',
-                      boxSizing: 'border-box',
                       letterSpacing: '0.01em',
                       cursor: 'not-allowed'
                     }}
                   />
                 </div>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '0.5rem',
-                    color: '#d1fae5',
-                    fontSize: '0.875rem',
-                    fontWeight: '400',
-                    letterSpacing: '0.01em'
-                  }}>
-                    Longitude (Auto-detected)
-                  </label>
-                  <input
-                    type="text"
-                    name="longitude"
-                    value={formData.longitude}
-                    readOnly
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      background: 'rgba(134, 239, 172, 0.1)',
-                      border: '2px solid rgba(134, 239, 172, 0.3)',
-                      borderRadius: '0.5rem',
-                      color: '#86efac',
-                      fontSize: '0.9375rem',
-                      fontWeight: '500',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                      letterSpacing: '0.01em',
-                      cursor: 'not-allowed'
-                    }}
-                  />
-                </div>
-              </div>
 
               <button
                 onClick={handleSubmit}
@@ -953,7 +789,6 @@ export function ProducerPortal({ setPage }) {
                   if (!loading) {
                     e.currentTarget.style.transform = 'translateY(-2px)';
                     e.currentTarget.style.boxShadow = '0 8px 30px rgba(134, 239, 172, 0.4)';
-                  }
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
@@ -963,9 +798,12 @@ export function ProducerPortal({ setPage }) {
                 {loading ? 'Processing...' : mode === 'create' ? 'Create Batch' : 'Add Transfer'}
               </button>
             </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
   );
 }

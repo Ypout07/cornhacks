@@ -731,7 +731,7 @@ export function ProducerPortal({ setPage }) {
                       fontWeight: '400',
                       letterSpacing: '0.01em'
                     }}>
-                      Company Name
+                      Actor Name
                     </label>
                     <input
                       type="text"
@@ -778,7 +778,7 @@ export function ProducerPortal({ setPage }) {
                     <input
                       type="text"
                       name="crate_number"
-                      placeholder="e.g. 1, 2, 5-10"
+                      placeholder="e.g., CRATE-001"
                       value={formData.crate_number}
                       onChange={handleChange}
                       style={{
@@ -820,7 +820,7 @@ export function ProducerPortal({ setPage }) {
                     <div style={{ display: 'flex', gap: '1rem' }}>
                       <button
                         type="button"
-                        onClick={() => handleActionChange('Arrived At Warehouse')}
+                        onClick={() => handleActionChange('transfer')}
                         style={{
                           flex: 1,
                           padding: '0.75rem',
@@ -835,7 +835,7 @@ export function ProducerPortal({ setPage }) {
                           letterSpacing: '0.01em'
                         }}
                       >
-                        Arrived At Warehouse
+                        Transfer
                       </button>
                       <button
                         type="button"
@@ -854,7 +854,7 @@ export function ProducerPortal({ setPage }) {
                           letterSpacing: '0.01em'
                         }}
                       >
-                        Arrived At Store
+                        Store
                       </button>
                     </div>
                   </div>

@@ -820,7 +820,7 @@ export function ProducerPortal({ setPage }) {
                     <div style={{ display: 'flex', gap: '1rem' }}>
                       <button
                         type="button"
-                        onClick={() => handleActionChange('Arrived At Warehouse')}
+                        onClick={() => handleActionChange('transfer')}
                         style={{
                           flex: 1,
                           padding: '0.75rem',

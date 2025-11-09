@@ -71,12 +71,12 @@ export function ProducerPortal({ setPage }) {
 
     if (mode === "create") {
       if (!formData.farm_name || !formData.harvest_date || !formData.quantity_kg || !formData.crate_count ||
-          !formData.grade || !formData.produce || !formData.latitude || !formData.longitude) {
+          !formData.crate_number || !formData.grade || !formData.produce || !formData.latitude || !formData.longitude) {
         setMessage({ type: "error", text: "Please fill in all fields" });
         return;
       }
     } else {
-      if (!formData.batch_uuid || !formData.farm_name || !formData.crate_number || !formData.action || !formData.latitude || !formData.longitude) {
+      if (!formData.batch_uuid || !formData.farm_name || !formData.action || !formData.latitude || !formData.longitude) {
         setMessage({ type: "error", text: "Please fill in all fields" });
         return;
       }
@@ -716,6 +716,47 @@ export function ProducerPortal({ setPage }) {
                         }}
                       />
                     </div>
+                    <div>
+                      <label style={{ 
+                        display: 'block', 
+                        marginBottom: '0.5rem', 
+                        color: '#d1fae5',
+                        fontSize: '0.875rem',
+                        fontWeight: '400',
+                        letterSpacing: '0.01em'
+                      }}>
+                        Crate Number
+                      </label>
+                      <input
+                        type="text"
+                        name="crate_number"
+                        placeholder="e.g., CRATE-001"
+                        value={formData.crate_number}
+                        onChange={handleChange}
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem 1rem',
+                          background: 'rgba(255, 255, 255, 0.08)',
+                          border: '2px solid rgba(134, 239, 172, 0.2)',
+                          borderRadius: '0.5rem',
+                          color: 'white',
+                          fontSize: '0.9375rem',
+                          fontWeight: '300',
+                          outline: 'none',
+                          transition: 'all 0.3s',
+                          boxSizing: 'border-box',
+                          letterSpacing: '0.01em'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                          e.currentTarget.style.borderColor = '#86efac';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                          e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
+                        }}
+                      />
+                    </div>
                   </div>
                 </>
               )}
@@ -731,55 +772,13 @@ export function ProducerPortal({ setPage }) {
                       fontWeight: '400',
                       letterSpacing: '0.01em'
                     }}>
-                      Company Name
+                      Actor Name
                     </label>
                     <input
                       type="text"
                       name="farm_name"
                       placeholder="e.g., Transport Co., Warehouse"
                       value={formData.farm_name}
-                      onChange={handleChange}
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem 1rem',
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        border: '2px solid rgba(134, 239, 172, 0.2)',
-                        borderRadius: '0.5rem',
-                        color: 'white',
-                        fontSize: '0.9375rem',
-                        fontWeight: '300',
-                        outline: 'none',
-                        transition: 'all 0.3s',
-                        boxSizing: 'border-box',
-                        letterSpacing: '0.01em'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-                        e.currentTarget.style.borderColor = '#86efac';
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                        e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '0.5rem', 
-                      color: '#d1fae5',
-                      fontSize: '0.875rem',
-                      fontWeight: '400',
-                      letterSpacing: '0.01em'
-                    }}>
-                      Crate Number
-                    </label>
-                    <input
-                      type="text"
-                      name="crate_number"
-                      placeholder="e.g. 1, 2, 5-10"
-                      value={formData.crate_number}
                       onChange={handleChange}
                       style={{
                         width: '100%',
@@ -820,7 +819,7 @@ export function ProducerPortal({ setPage }) {
                     <div style={{ display: 'flex', gap: '1rem' }}>
                       <button
                         type="button"
-                        onClick={() => handleActionChange('Arrived At Warehouse')}
+                        onClick={() => handleActionChange('transfer')}
                         style={{
                           flex: 1,
                           padding: '0.75rem',
@@ -835,7 +834,7 @@ export function ProducerPortal({ setPage }) {
                           letterSpacing: '0.01em'
                         }}
                       >
-                        Arrived At Warehouse
+                        Transfer
                       </button>
                       <button
                         type="button"
@@ -854,7 +853,7 @@ export function ProducerPortal({ setPage }) {
                           letterSpacing: '0.01em'
                         }}
                       >
-                        Arrived At Store
+                        Store
                       </button>
                     </div>
                   </div>
