@@ -213,7 +213,7 @@ export function LogisticsPortal({ setPage }) {
             style={{
               background: 'none',
               border: '2px solid rgba(134, 239, 172, 0.3)',
-              color: 'white',
+              color: '#86efac',
               padding: '0.5rem 1.25rem',
               borderRadius: '0.5rem',
               fontSize: '0.875rem',
