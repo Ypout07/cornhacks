@@ -58,7 +58,11 @@ def init_batch():
     try:
         print(f"--- RECEIVED DATA: {batch_data} ---")
         
-        genesis_data = f"{id}{batch_data['farm_name']}{batch_data['harvest_date']}"
+        # --- TIMESTAMP FIX: Generate timestamp BEFORE hashing ---
+        timestamp = datetime.now(timezone.utc)
+        timestamp_str = timestamp.isoformat()
+
+        genesis_data = f"{id}{batch_data['farm_name']}{batch_data['harvest_date']}{timestamp_str}"
         previous_hash = "0"*64
         current_hash = calculate_hash(
             data_to_hash=genesis_data,
@@ -68,7 +72,7 @@ def init_batch():
         genesis_block = {
             "actor_name": batch_data['farm_name'],
             "action": "Harvested",
-            "timestamp": datetime.now(timezone.utc), 
+            "timestamp": timestamp, # <-- Use the generated timestamp
             "latitude": batch_data['latitude'],
             "longitude": batch_data['longitude'],
             "previous_hash": previous_hash,
@@ -203,13 +207,18 @@ def transfer_batch():
                 return jsonify({"error": f"Could not find any parent block for crate {num}"}), 500
 
             previous_hash = last_block['current_hash']
-            new_data_string = f"{actor_name}{action}{latitude}{longitude}{crate_id}"
+
+            # --- TIMESTAMP FIX: Generate timestamp BEFORE hashing ---
+            timestamp = datetime.now(timezone.utc)
+            timestamp_str = timestamp.isoformat()
+
+            new_data_string = f"{actor_name}{action}{latitude}{longitude}{crate_id}{timestamp_str}"
             current_hash = calculate_hash(new_data_string, previous_hash)
 
             new_block = {
                 "actor_name": actor_name,
                 "action": action,
-                "timestamp": datetime.now(timezone.utc), # <-- FIX 3: Replaced SERVER_TIMESTAMP
+                "timestamp": timestamp, # <-- Use the generated timestamp
                 "latitude": latitude,
                 "longitude": longitude,
                 "previous_hash": previous_hash, 

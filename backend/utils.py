@@ -1,6 +1,7 @@
 import hashlib
 from haversine import haversine, Unit
 from typing import List, Dict, Any, Optional
+from datetime import datetime, timezone
 
 # Constants
 SPEED_LIMIT_KMH = 100 
@@ -47,28 +48,32 @@ def parse_crate_string(crate_string: Optional[str]) -> List[int]:
 
 def reconstruct_hashable_string(block: Dict[str, Any], batch_data: Dict[str, Any]) -> str:
     """
-    Reconstructs the original data string used to generate the current hash. 
+    Reconstructs the original data string used to generate the current hash.
     This is essential for confirming chain integrity.
     """
+    # --- TIMESTAMP FIX: Retrieve and format the timestamp ---
+    timestamp = block.get('timestamp')
+    if isinstance(timestamp, datetime):
+        timestamp_str = timestamp.isoformat()
+    else:
+        # Fallback for older data or different timestamp formats if necessary
+        timestamp_str = str(timestamp)
+
     # Genesis Block (Crate ID is None)
     if block.get('crate_id') is None:
-        # The genesis block data string was created using: 
-        # f"{id}{batch_data['farm_name']}{batch_data['harvest_date']}"
         id = batch_data.get('batch_uuid', '')
         farm_name = batch_data.get('farm_name', '')
         harvest_date = batch_data.get('harvest_date', '')
-        return f"{id}{farm_name}{harvest_date}"
+        return f"{id}{farm_name}{harvest_date}{timestamp_str}"
     
     # Transfer/Store Block (Crate ID is present)
     else:
-        # Transfer block data string was created using: 
-        # f"{actor_name}{action}{latitude}{longitude}{crate_id_to_log}"
         actor_name = block.get('actor_name', '')
         action = block.get('action', '')
         latitude = block.get('latitude', '')
         longitude = block.get('longitude', '')
         crate_id = block.get('crate_id', '')
-        return f"{actor_name}{action}{latitude}{longitude}{crate_id}"
+        return f"{actor_name}{action}{latitude}{longitude}{crate_id}{timestamp_str}"
 
 def confirm_chain(blocks: List[Dict[str, Any]], batch_data: Dict[str, Any]) -> bool:
     """
