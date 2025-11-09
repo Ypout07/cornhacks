@@ -177,7 +177,7 @@ export function ProducerPortal({ setPage }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#0a1f0a',
+        background: 'linear-gradient(135deg, #0a1f0a 0%, #14532d 50%, #0a1f0a 100%)',
         overflow: 'auto'
       }}>
         <div style={{
