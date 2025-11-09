@@ -4,3 +4,5 @@ haversine
 flask-cors
 sqlalchemy
 SQLAlchemy
+qrcode
+fpdf

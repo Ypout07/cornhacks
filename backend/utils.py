@@ -52,25 +52,27 @@ def haversine_audit_logic(blocks):
         print(f"--- ERROR IN AUDIT LOGIC ---: {e}")
         return False # Fail on any error
 
-def confirm_chain(last_block, batch):
-    if len(last_block.previous_hash) != 64 or len(last_block.current_hash) != 64:
-        return False
-    
-    if last_block.previous_hash == "0"*64:
-        genesis_data = f"{batch.batch_uuid}{last_block.actor_name}{batch.harvest_date}"
-        current_hash = calculate_hash(data_to_hash=genesis_data,previous_hash="0"*64)
-        if current_hash != last_block.current_hash:
+def confirm_chain(blocks, batch):
+    for i in range(len(blocks)):
+        block = blocks[i]
+        if len(block.previous_hash) != 64 or len(block.current_hash) != 64:
             return False
-    else:
-        previous_hash = last_block.previous_hash
-        new_data_string = (
-        f"{last_block.actor_name}{last_block.action}"
-        f"{last_block.latitude}{last_block.longitude}"
-        )
-        current_hash = calculate_hash(
-            data_to_hash=new_data_string,
-            previous_hash=previous_hash
-        )
-        if current_hash != last_block.current_hash:
-            return False
-    return True
+        
+        if block.previous_hash == "0"*64:
+            remade_data = f"{batch.batch_uuid}{block.actor_name}{batch.harvest_date}"
+            remade_hash = calculate_hash(data_to_hash=remade_data,previous_hash="0"*64)
+            if remade_hash != block.current_hash:
+                return False
+        else:
+            previous_hash = block.previous_hash
+            remade_data_string = (
+            f"{block.actor_name}{block.action}"
+            f"{block.latitude}{block.longitude}"
+            )
+            remade_hash = calculate_hash(
+                data_to_hash=remade_data_string,
+                previous_hash=previous_hash
+            )
+            if remade_hash != block.current_hash:
+                return False
+        return True
