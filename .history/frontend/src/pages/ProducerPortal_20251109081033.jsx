@@ -177,10 +177,10 @@ export function ProducerPortal({ setPage }) {
         });
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0x000000, 0.7);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0x000000, 0.9);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
       directionalLight.position.set(5, 3, 5);
       scene.add(directionalLight);
 

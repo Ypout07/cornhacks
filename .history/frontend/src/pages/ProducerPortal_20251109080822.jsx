@@ -87,7 +87,7 @@ export function ProducerPortal({ setPage }) {
         shininess: 10,
         opacity: 0.95,
         transparent: true,
-        color: '0x000000'
+        color: '0xffffff'
       });
 
       const globe = new THREE.Mesh(geometry, earthMaterial);
@@ -177,10 +177,10 @@ export function ProducerPortal({ setPage }) {
         });
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0x000000, 0.7);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0x000000, 0.9);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
       directionalLight.position.set(5, 3, 5);
       scene.add(directionalLight);
 

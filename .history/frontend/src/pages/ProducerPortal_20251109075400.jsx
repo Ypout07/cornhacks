@@ -51,7 +51,7 @@ export function ProducerPortal({ setPage }) {
         0.1,
         1000
       );
-      camera.position.z = 350;
+      camera.position.z = 300;
 
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
@@ -80,14 +80,14 @@ export function ProducerPortal({ setPage }) {
 
       // Create Earth globe (textured)
       // Create Earth globe (textured)
-      const geometry = new THREE.SphereGeometry(150, 100, 100);
+      const geometry = new THREE.SphereGeometry(150, 64, 64);
       
       const earthMaterial = new THREE.MeshPhongMaterial({
         map: earthTexture,
         shininess: 10,
         opacity: 0.95,
         transparent: true,
-        color: '0x000000'
+        color: 0xffffff
       });
 
       const globe = new THREE.Mesh(geometry, earthMaterial);
@@ -95,7 +95,7 @@ export function ProducerPortal({ setPage }) {
       globeGroup.add(globe);
 
       // Add atmosphere glow
-      const atmosphereGeometry = new THREE.SphereGeometry(150, 64, 64);
+      const atmosphereGeometry = new THREE.SphereGeometry(102, 64, 64);
       const atmosphereMaterial = new THREE.ShaderMaterial({
         vertexShader: `
           varying vec3 vNormal;
@@ -138,10 +138,10 @@ export function ProducerPortal({ setPage }) {
           console.log('GeoJSON loaded, rendering borders...');
           
           const borderMaterial = new THREE.LineBasicMaterial({
-            color: 0x333333,
+            color: 0x000000,
             transparent: true,
-            opacity: 0.9,
-            linewidth: 3
+            opacity: 0.8,
+            linewidth: 2
           });
 
           geojson.features.forEach(feature => {
@@ -150,7 +150,7 @@ export function ProducerPortal({ setPage }) {
             if (geometry.type === 'Polygon') {
               geometry.coordinates.forEach(ring => {
                 const points = ring.map(coord => 
-                  latLngToVector3(coord[1], coord[0], 150.5)
+                  latLngToVector3(coord[1], coord[0], 100.5)
                 );
                 const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
                 const line = new THREE.Line(lineGeometry, borderMaterial);
@@ -160,7 +160,7 @@ export function ProducerPortal({ setPage }) {
               geometry.coordinates.forEach(polygon => {
                 polygon.forEach(ring => {
                   const points = ring.map(coord => 
-                    latLngToVector3(coord[1], coord[0], 150.5)
+                    latLngToVector3(coord[1], coord[0], 100.5)
                   );
                   const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
                   const line = new THREE.Line(lineGeometry, borderMaterial);
@@ -177,10 +177,10 @@ export function ProducerPortal({ setPage }) {
         });
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0x000000, 0.7);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0x000000, 0.9);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
       directionalLight.position.set(5, 3, 5);
       scene.add(directionalLight);
 
