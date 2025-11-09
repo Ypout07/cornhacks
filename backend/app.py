@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 import random
-from database import SessionLocal, Batch, LedgerBlock, create_db_and_tables
-from utils import calculate_hash, haversine_audit_logic, confirm_chain, parse_crate_string
+from .database import SessionLocal, Batch, LedgerBlock, create_db_and_tables
+from .utils import calculate_hash, haversine_audit_logic, confirm_chain, parse_crate_string
 from datetime import datetime, timezone
 import os
 import io
