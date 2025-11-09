@@ -137,9 +137,11 @@ def transfer_batch():
         db.add(new_block)
         db.commit()
 
-        valid_data(batch_uuid)
+        ts_pmo = "Failed"
+        if (valid_data(batch_uuid)):
+            ts_pmo = "Passed"
         
-        return jsonify({"message": "Transfer recorded"})
+        return jsonify({"message": f"Transfer recorded Audit: {ts_pmo}"})
 
     except Exception as e:
         db.rollback() # Undo if there's an error
