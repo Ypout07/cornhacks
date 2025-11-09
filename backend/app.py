@@ -31,7 +31,7 @@ def get_db():
 
 @app.route("/")
 def home():
-    return jsonify({"message" : "LMAO OK"})
+    return jsonify({"message" : "Welcome to Banana Blockchain"})
 
 @app.route("/api/batch", methods=["POST"])
 def init_batch():
