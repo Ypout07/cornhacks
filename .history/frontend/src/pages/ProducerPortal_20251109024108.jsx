@@ -82,12 +82,6 @@ export function ProducerPortal({ setPage }) {
     }
 
     setLoading(true);
-<<<<<<< HEAD
-    
-    let result = null; 
-    
-=======
->>>>>>> 9fe8741e3b69cda5fa5fce5b9188dc28aa8d71c7
     try {
       if (mode === "create") {
         const data = {
@@ -101,13 +95,7 @@ export function ProducerPortal({ setPage }) {
           grade: formData.grade,
           produce: formData.produce,
         };
-<<<<<<< HEAD
-
-        result = await createBatch(data); 
-        console.log("CREATED BATCH WITH ID:", result.batch_uuid);
-=======
         const result = await createBatch(data);
->>>>>>> 9fe8741e3b69cda5fa5fce5b9188dc28aa8d71c7
         setMessage({
           type: "success",
           text: `Batch created successfully! ID: ${result.batch_uuid}`,
@@ -128,36 +116,6 @@ export function ProducerPortal({ setPage }) {
         });
       }
       
-<<<<<<< HEAD
-      if (mode === "create") {
-        // We now just clear the form, since the link is displayed
-        setFormData({
-          batch_uuid: "",
-          farm_name: "",
-          harvest_date: "",
-          quantity_kg: "",
-          grade: "",
-          produce: "",
-          action: "harvest",
-          latitude: "",
-          longitude: "",
-        });
-        // We stay in 'create' mode
-      } else {
-        setFormData({
-          batch_uuid: "",
-          farm_name: "",
-          harvest_date: "",
-          quantity_kg: "",
-          grade: "",
-          produce: "",
-          action: "harvest", 
-          latitude: "",
-          longitude: "",
-        });
-        setMode("create");
-      }
-=======
       // Clear form on success (but keep GPS coordinates)
       const currentLat = formData.latitude;
       const currentLng = formData.longitude;
@@ -173,7 +131,6 @@ export function ProducerPortal({ setPage }) {
         latitude: currentLat,
         longitude: currentLng,
       });
->>>>>>> 9fe8741e3b69cda5fa5fce5b9188dc28aa8d71c7
     } catch (error) {
       console.error(error);
       setMessage({
