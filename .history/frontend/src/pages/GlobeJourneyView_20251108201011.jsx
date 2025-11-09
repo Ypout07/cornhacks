@@ -1,5 +1,5 @@
 // ============================================================================
-// GlobeJourneyView.jsx - 3D Globe Journey Visualization (textured globe + working drag)
+// GlobeJourneyView.jsx - 3D Globe Journey Visualization
 // ============================================================================
 import { ArrowLeft, Package } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -48,34 +48,20 @@ export function GlobeJourneyView({ setPage, batchData }) {
       globeGroup = new THREE.Group();
       scene.add(globeGroup);
 
-      // Load texture for the globe
-      const textureLoader = new THREE.TextureLoader();
-      // 4k earth map (publicly available on GitHub raw). Replace with your own host if needed.
-      const earthTexture = textureLoader.load(
-        'https://raw.githubusercontent.com/trevorhobenshield/earth-textures/main/earthmap4k.jpg',
-        () => {
-          // texture loaded
-          console.log('Earth texture loaded');
-        },
-        undefined,
-        (err) => {
-          console.warn('Failed to load earth texture, falling back to solid color', err);
-        }
-      );
-
-      // Create Earth globe (textured)
+      // Create Earth globe
       const geometry = new THREE.SphereGeometry(100, 64, 64);
       
       const earthMaterial = new THREE.MeshPhongMaterial({
-        map: earthTexture,
-        shininess: 10,
+        color: 0x2d5a3d,
+        emissive: 0x112211,
+        shininess: 10
       });
 
       const globe = new THREE.Mesh(geometry, earthMaterial);
       globeRef = globe;
       globeGroup.add(globe);
 
-      // Add atmosphere glow (keeps your shader from original)
+      // Add atmosphere glow
       const atmosphereGeometry = new THREE.SphereGeometry(102, 64, 64);
       const atmosphereMaterial = new THREE.ShaderMaterial({
         vertexShader: `
@@ -100,7 +86,7 @@ export function GlobeJourneyView({ setPage, batchData }) {
       atmosphereRef = atmosphere;
       globeGroup.add(atmosphere);
 
-      // Sample journey data (hardcoded for now — replace with batchData mapping when ready)
+      // Sample journey data
       const journeyPoints = [
         { latitude: 10.3157, longitude: -84.2189, action: 'Harvested', actor_name: 'Green Valley Farm' },
         { latitude: 9.9281, longitude: -84.0907, action: 'Processed', actor_name: 'Processing Center' },
@@ -108,7 +94,7 @@ export function GlobeJourneyView({ setPage, batchData }) {
         { latitude: 40.7128, longitude: -74.0060, action: 'Received', actor_name: 'NYC Distribution' }
       ];
 
-      // Convert lat/lng to 3D coordinates on sphere
+      // Convert lat/lng to 3D coordinates
       const latLngToVector3 = (lat, lng, radius) => {
         const phi = (90 - lat) * (Math.PI / 180);
         const theta = (lng + 180) * (Math.PI / 180);
@@ -130,13 +116,13 @@ export function GlobeJourneyView({ setPage, batchData }) {
         const pointGeometry = new THREE.SphereGeometry(2, 16, 16);
         const pointMesh = new THREE.Mesh(pointGeometry, pointsMaterial);
         pointMesh.position.copy(position);
-        // add to group so they rotate with globe
+        // add visual points to globeGroup so they rotate together
         globeGroup.add(pointMesh);
 
         linePoints.push(position);
       });
 
-      // Create paths between points as curved lines
+      // Create paths between points
       for (let i = 0; i < linePoints.length - 1; i++) {
         const start = linePoints[i];
         const end = linePoints[i + 1];
@@ -165,7 +151,8 @@ export function GlobeJourneyView({ setPage, batchData }) {
       directionalLight.position.set(5, 3, 5);
       scene.add(directionalLight);
 
-      // ---------- Pointer handlers (robust, uses pointer capture) ----------
+      // ---------- Pointer handlers (robust) ----------
+      // Make cursor visible
       renderer.domElement.style.cursor = 'grab';
 
       // Utility: convert client coords to canvas-local coords
@@ -174,10 +161,11 @@ export function GlobeJourneyView({ setPage, batchData }) {
         return { x: clientX - rect.left, y: clientY - rect.top };
       };
 
-      const sensitivity = 0.0125; // drag sensitivity
+      const sensitivity = 0.0125; // increased a bit for clear feedback
 
       const onPointerDown = (e) => {
-        if (typeof e.button === 'number' && e.button !== 0) return; // only primary mouse button
+        // Only primary button for mouse; touch events have no button
+        if (typeof e.button === 'number' && e.button !== 0) return;
 
         isDragging = true;
         activePointerId = e.pointerId ?? null;
@@ -189,7 +177,7 @@ export function GlobeJourneyView({ setPage, batchData }) {
             renderer.domElement.setPointerCapture(activePointerId);
           }
         } catch (err) {
-          // ignore capture errors
+          // ignore
         }
 
         renderer.domElement.style.cursor = 'grabbing';
@@ -205,6 +193,7 @@ export function GlobeJourneyView({ setPage, batchData }) {
         const deltaX = p.x - previousMousePosition.x;
         const deltaY = p.y - previousMousePosition.y;
 
+        // update target rotation (rotate group so everything moves together)
         targetRotation.y += deltaX * sensitivity;
         targetRotation.x += deltaY * sensitivity;
 
@@ -212,12 +201,13 @@ export function GlobeJourneyView({ setPage, batchData }) {
         targetRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.x));
 
         previousMousePosition = { x: p.x, y: p.y };
+        // debug logs — remove in production if noisy
         console.log('pointermove — delta', deltaX, deltaY, 'target', targetRotation);
         e.preventDefault();
       };
 
       const endDrag = (e) => {
-        if (activePointerId !== null && e && e.pointerId !== undefined && e.pointerId !== activePointerId) return;
+        if (activePointerId !== null && e.pointerId !== undefined && e.pointerId !== activePointerId) return;
         isDragging = false;
         try {
           if (activePointerId !== null && typeof renderer.domElement.releasePointerCapture === 'function') {
@@ -235,11 +225,13 @@ export function GlobeJourneyView({ setPage, batchData }) {
       const onPointerUp = (e) => endDrag(e);
       const onPointerCancel = (e) => endDrag(e);
       const onPointerLeave = (e) => {
+        // don't forcibly stop on pointerleave because pointercapture should keep events; but be safe:
         if (!isDragging) return;
         endDrag(e);
         console.log('pointerleave — forced stop');
       };
 
+      // Attach listeners directly to canvas
       renderer.domElement.addEventListener('pointerdown', onPointerDown);
       renderer.domElement.addEventListener('pointermove', onPointerMove);
       renderer.domElement.addEventListener('pointerup', onPointerUp);
@@ -294,16 +286,10 @@ export function GlobeJourneyView({ setPage, batchData }) {
         if (mountRef.current && renderer.domElement) {
           mountRef.current.removeChild(renderer.domElement);
         }
-        // dispose geometry / materials
-        try {
-          geometry.dispose();
-          earthMaterial.dispose();
-          atmosphereGeometry.dispose();
-          atmosphereMaterial.dispose();
-          if (earthTexture && earthTexture.dispose) earthTexture.dispose();
-        } catch (err) {
-          // ignore disposal errors
-        }
+        geometry.dispose();
+        earthMaterial.dispose();
+        atmosphereGeometry.dispose();
+        atmosphereMaterial.dispose();
       };
     } catch (error) {
       console.error('Globe error:', error);

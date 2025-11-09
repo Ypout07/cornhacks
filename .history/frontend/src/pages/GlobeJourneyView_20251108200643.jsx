@@ -1,5 +1,5 @@
 // ============================================================================
-// GlobeJourneyView.jsx - 3D Globe Journey Visualization (textured globe + working drag)
+// GlobeJourneyView.jsx - 3D Globe Journey Visualization
 // ============================================================================
 import { ArrowLeft, Package } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -17,7 +17,6 @@ export function GlobeJourneyView({ setPage, batchData }) {
 
     let globeRef = null;
     let atmosphereRef = null;
-    let globeGroup = null;
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
     let rotation = { x: 0, y: 0 };
@@ -39,43 +38,22 @@ export function GlobeJourneyView({ setPage, batchData }) {
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
       renderer.setClearColor(0x0a1f0a, 1);
-      // prevent browser from handling touch gestures/scroll during drag
-      renderer.domElement.style.touchAction = 'none';
-      renderer.domElement.style.userSelect = 'none';
       mountRef.current.appendChild(renderer.domElement);
 
-      // Create group that will be rotated
-      globeGroup = new THREE.Group();
-      scene.add(globeGroup);
-
-      // Load texture for the globe
-      const textureLoader = new THREE.TextureLoader();
-      // 4k earth map (publicly available on GitHub raw). Replace with your own host if needed.
-      const earthTexture = textureLoader.load(
-        'https://raw.githubusercontent.com/trevorhobenshield/earth-textures/main/earthmap4k.jpg',
-        () => {
-          // texture loaded
-          console.log('Earth texture loaded');
-        },
-        undefined,
-        (err) => {
-          console.warn('Failed to load earth texture, falling back to solid color', err);
-        }
-      );
-
-      // Create Earth globe (textured)
+      // Create Earth globe
       const geometry = new THREE.SphereGeometry(100, 64, 64);
       
       const earthMaterial = new THREE.MeshPhongMaterial({
-        map: earthTexture,
-        shininess: 10,
+        color: 0x2d5a3d,
+        emissive: 0x112211,
+        shininess: 10
       });
 
       const globe = new THREE.Mesh(geometry, earthMaterial);
       globeRef = globe;
-      globeGroup.add(globe);
+      scene.add(globe);
 
-      // Add atmosphere glow (keeps your shader from original)
+      // Add atmosphere glow
       const atmosphereGeometry = new THREE.SphereGeometry(102, 64, 64);
       const atmosphereMaterial = new THREE.ShaderMaterial({
         vertexShader: `
@@ -98,9 +76,9 @@ export function GlobeJourneyView({ setPage, batchData }) {
       });
       const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
       atmosphereRef = atmosphere;
-      globeGroup.add(atmosphere);
+      scene.add(atmosphere);
 
-      // Sample journey data (hardcoded for now — replace with batchData mapping when ready)
+      // Sample journey data
       const journeyPoints = [
         { latitude: 10.3157, longitude: -84.2189, action: 'Harvested', actor_name: 'Green Valley Farm' },
         { latitude: 9.9281, longitude: -84.0907, action: 'Processed', actor_name: 'Processing Center' },
@@ -108,7 +86,7 @@ export function GlobeJourneyView({ setPage, batchData }) {
         { latitude: 40.7128, longitude: -74.0060, action: 'Received', actor_name: 'NYC Distribution' }
       ];
 
-      // Convert lat/lng to 3D coordinates on sphere
+      // Convert lat/lng to 3D coordinates
       const latLngToVector3 = (lat, lng, radius) => {
         const phi = (90 - lat) * (Math.PI / 180);
         const theta = (lng + 180) * (Math.PI / 180);
@@ -130,13 +108,12 @@ export function GlobeJourneyView({ setPage, batchData }) {
         const pointGeometry = new THREE.SphereGeometry(2, 16, 16);
         const pointMesh = new THREE.Mesh(pointGeometry, pointsMaterial);
         pointMesh.position.copy(position);
-        // add to group so they rotate with globe
-        globeGroup.add(pointMesh);
+        scene.add(pointMesh);
 
         linePoints.push(position);
       });
 
-      // Create paths between points as curved lines
+      // Create paths between points
       for (let i = 0; i < linePoints.length - 1; i++) {
         const start = linePoints[i];
         const end = linePoints[i + 1];
@@ -154,7 +131,7 @@ export function GlobeJourneyView({ setPage, batchData }) {
           opacity: 0.6
         });
         const line = new THREE.Line(lineGeometry, lineMaterial);
-        globeGroup.add(line);
+        scene.add(line);
       }
 
       // Lighting
@@ -165,85 +142,86 @@ export function GlobeJourneyView({ setPage, batchData }) {
       directionalLight.position.set(5, 3, 5);
       scene.add(directionalLight);
 
-      // ---------- Pointer handlers (robust, uses pointer capture) ----------
+      // ---------- Mouse / Pointer event handlers (fixed) ----------
+      // Use pointer events on the canvas and pointer capture for reliable dragging.
       renderer.domElement.style.cursor = 'grab';
 
-      // Utility: convert client coords to canvas-local coords
-      const getCanvasPoint = (clientX, clientY) => {
-        const rect = renderer.domElement.getBoundingClientRect();
-        return { x: clientX - rect.left, y: clientY - rect.top };
-      };
-
-      const sensitivity = 0.0125; // drag sensitivity
-
       const onPointerDown = (e) => {
-        if (typeof e.button === 'number' && e.button !== 0) return; // only primary mouse button
+        // Only respond to primary button
+        if (e.button !== undefined && e.button !== 0) return;
 
         isDragging = true;
         activePointerId = e.pointerId ?? null;
-        const p = getCanvasPoint(e.clientX, e.clientY);
-        previousMousePosition = { x: p.x, y: p.y };
+        previousMousePosition = { x: e.clientX, y: e.clientY };
 
         try {
-          if (activePointerId !== null && typeof renderer.domElement.setPointerCapture === 'function') {
+          // capture pointer so we continue receiving moves even if pointer leaves canvas
+          if (typeof renderer.domElement.setPointerCapture === 'function' && activePointerId !== null) {
             renderer.domElement.setPointerCapture(activePointerId);
           }
         } catch (err) {
-          // ignore capture errors
+          // ignore capture errors on some browsers
         }
 
         renderer.domElement.style.cursor = 'grabbing';
+        // prevent default to avoid text selection or touch scrolling
         e.preventDefault();
-        console.log('pointerdown — started dragging', previousMousePosition);
+        console.log('Started dragging (pointer)');
       };
 
       const onPointerMove = (e) => {
         if (!isDragging) return;
+
+        // if the pointerId doesn't match the active one, ignore (safety on multi-touch)
         if (activePointerId !== null && e.pointerId !== undefined && e.pointerId !== activePointerId) return;
 
-        const p = getCanvasPoint(e.clientX, e.clientY);
-        const deltaX = p.x - previousMousePosition.x;
-        const deltaY = p.y - previousMousePosition.y;
+        const deltaX = e.clientX - previousMousePosition.x;
+        const deltaY = e.clientY - previousMousePosition.y;
 
-        targetRotation.y += deltaX * sensitivity;
-        targetRotation.x += deltaY * sensitivity;
+        // Rotate horizontally by dragging left/right, vertically by dragging up/down
+        targetRotation.y += deltaX * 0.01;
+        targetRotation.x += deltaY * 0.01;
 
-        // clamp vertical rotation
+        // Limit vertical rotation to prevent flipping
         targetRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.x));
 
-        previousMousePosition = { x: p.x, y: p.y };
-        console.log('pointermove — delta', deltaX, deltaY, 'target', targetRotation);
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+        // keep console log for debug
+        console.log('Rotation target (pointer):', targetRotation);
         e.preventDefault();
       };
 
-      const endDrag = (e) => {
-        if (activePointerId !== null && e && e.pointerId !== undefined && e.pointerId !== activePointerId) return;
+      const onPointerUp = (e) => {
+        // If pointerId present, ensure it matches active; otherwise allow
+        if (activePointerId !== null && e.pointerId !== undefined && e.pointerId !== activePointerId) return;
+
         isDragging = false;
         try {
-          if (activePointerId !== null && typeof renderer.domElement.releasePointerCapture === 'function') {
+          if (typeof renderer.domElement.releasePointerCapture === 'function' && activePointerId !== null) {
             renderer.domElement.releasePointerCapture(activePointerId);
           }
         } catch (err) {
-          // ignore
+          // ignore release errors
         }
         activePointerId = null;
         renderer.domElement.style.cursor = 'grab';
-        e && e.preventDefault();
-        console.log('pointerup/ended dragging');
+        e.preventDefault();
+        console.log('Stopped dragging (pointer)');
       };
 
-      const onPointerUp = (e) => endDrag(e);
-      const onPointerCancel = (e) => endDrag(e);
+      // Also handle pointerleave as a safety to stop dragging
       const onPointerLeave = (e) => {
         if (!isDragging) return;
-        endDrag(e);
-        console.log('pointerleave — forced stop');
+        isDragging = false;
+        activePointerId = null;
+        renderer.domElement.style.cursor = 'grab';
+        console.log('Pointer left canvas, stopped dragging');
       };
 
+      // attach pointer listeners to the canvas element
       renderer.domElement.addEventListener('pointerdown', onPointerDown);
       renderer.domElement.addEventListener('pointermove', onPointerMove);
       renderer.domElement.addEventListener('pointerup', onPointerUp);
-      renderer.domElement.addEventListener('pointercancel', onPointerCancel);
       renderer.domElement.addEventListener('pointerleave', onPointerLeave);
 
       // ---------- Animation loop ----------
@@ -251,13 +229,18 @@ export function GlobeJourneyView({ setPage, batchData }) {
         requestAnimationFrame(animate);
         
         // Smooth interpolation
-        rotation.x += (targetRotation.x - rotation.x) * 0.12;
-        rotation.y += (targetRotation.y - rotation.y) * 0.12;
+        rotation.x += (targetRotation.x - rotation.x) * 0.1;
+        rotation.y += (targetRotation.y - rotation.y) * 0.1;
         
-        // Apply rotation to the group
-        if (globeGroup) {
-          globeGroup.rotation.x = rotation.x;
-          globeGroup.rotation.y = rotation.y;
+        // Apply rotation
+        if (globeRef) {
+          globeRef.rotation.x = rotation.x;
+          globeRef.rotation.y = rotation.y;
+        }
+        
+        if (atmosphereRef) {
+          atmosphereRef.rotation.x = rotation.x;
+          atmosphereRef.rotation.y = rotation.y;
         }
         
         // Auto-rotate when not dragging
@@ -289,21 +272,14 @@ export function GlobeJourneyView({ setPage, batchData }) {
         renderer.domElement.removeEventListener('pointerdown', onPointerDown);
         renderer.domElement.removeEventListener('pointermove', onPointerMove);
         renderer.domElement.removeEventListener('pointerup', onPointerUp);
-        renderer.domElement.removeEventListener('pointercancel', onPointerCancel);
         renderer.domElement.removeEventListener('pointerleave', onPointerLeave);
         if (mountRef.current && renderer.domElement) {
           mountRef.current.removeChild(renderer.domElement);
         }
-        // dispose geometry / materials
-        try {
-          geometry.dispose();
-          earthMaterial.dispose();
-          atmosphereGeometry.dispose();
-          atmosphereMaterial.dispose();
-          if (earthTexture && earthTexture.dispose) earthTexture.dispose();
-        } catch (err) {
-          // ignore disposal errors
-        }
+        geometry.dispose();
+        earthMaterial.dispose();
+        atmosphereGeometry.dispose();
+        atmosphereMaterial.dispose();
       };
     } catch (error) {
       console.error('Globe error:', error);
