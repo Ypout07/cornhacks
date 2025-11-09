@@ -1,3 +1,6 @@
+// ============================================================================
+// ProducerPortal.jsx
+// ============================================================================
 import { AlertCircle, ArrowLeft, CheckCircle, Package } from "lucide-react";
 import React, { useState } from "react";
 
@@ -50,9 +53,6 @@ export function ProducerPortal({ setPage }) {
     }
 
     setLoading(true);
-
-    let result = null;
-
     try {
       if (mode === "create") {
         const data = {
@@ -65,8 +65,7 @@ export function ProducerPortal({ setPage }) {
           grade: formData.grade,
           produce: formData.produce,
         };
-        result = await createBatch(data);
-        console.log("CREATED BATCH WITH ID:", result.batch_uuid);
+        const result = await createBatch(data);
         setMessage({
           type: "success",
           text: `Batch created successfully! ID: ${result.batch_uuid}`,
@@ -79,13 +78,14 @@ export function ProducerPortal({ setPage }) {
           latitude: parseFloat(formData.latitude),
           longitude: parseFloat(formData.longitude),
         };
-        result = await addTransfer(data);
+        const result = await addTransfer(data);
         setMessage({
           type: "success",
-          text: `Transfer added to batch ${formData.batch_uuid}`,
+          text: `Transfer added to batch ${result.batch_uuid}`,
         });
       }
       
+      // Clear form on success
       setFormData({
         batch_uuid: "",
         farm_name: "",
@@ -93,12 +93,10 @@ export function ProducerPortal({ setPage }) {
         quantity_kg: "",
         grade: "",
         produce: "",
-        action: "harvest",
+        action: mode === "create" ? "harvest" : "transfer",
         latitude: "",
         longitude: "",
       });
-      setMode("create");
-      
     } catch (error) {
       console.error(error);
       setMessage({

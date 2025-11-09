@@ -82,23 +82,33 @@ export function ProducerPortal({ setPage }) {
         result = await addTransfer(data);
         setMessage({
           type: "success",
-          text: `Transfer added to batch ${formData.batch_uuid}`,
+          text: `Transfer added to batch ${result.batch_uuid}`,
         });
       }
       
-      setFormData({
-        batch_uuid: "",
-        farm_name: "",
-        harvest_date: "",
-        quantity_kg: "",
-        grade: "",
-        produce: "",
-        action: "harvest",
-        latitude: "",
-        longitude: "",
-      });
-      setMode("create");
-      
+      if (mode === "create") {
+        setFormData({
+          ...formData, // Keep old form data
+          batch_uuid: result.batch_uuid, 
+          farm_name: formData.farm_name, 
+          action: "transfer", 
+        });
+        setMode("transfer"); 
+      } else {
+        // Clear form ONLY after a successful transfer
+        setFormData({
+          batch_uuid: "",
+          farm_name: "",
+          harvest_date: "",
+          quantity_kg: "",
+          grade: "",
+          produce: "",
+          action: "harvest", 
+          latitude: "",
+          longitude: "",
+        });
+        setMode("create"); // Go back to create mode
+      }
     } catch (error) {
       console.error(error);
       setMessage({

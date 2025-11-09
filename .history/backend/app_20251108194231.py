@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import random
 from database import SessionLocal, Batch, LedgerBlock, create_db_and_tables
-from utils import calculate_hash, haversine_audit_logic
+from .utils import calculate_hash, haversine_audit_logic
 import datetime
 
 # Inits

@@ -50,13 +50,10 @@ export function ProducerPortal({ setPage }) {
     }
 
     setLoading(true);
-
-    let result = null;
-
     try {
       if (mode === "create") {
         const data = {
-          farm_name: formData.farm_name,
+          actor_name: formData.farm_name,
           action: "harvest",
           latitude: parseFloat(formData.latitude),
           longitude: parseFloat(formData.longitude),
@@ -65,7 +62,7 @@ export function ProducerPortal({ setPage }) {
           grade: formData.grade,
           produce: formData.produce,
         };
-        result = await createBatch(data);
+        const result = await createBatch(data);
         console.log("CREATED BATCH WITH ID:", result.batch_uuid);
         setMessage({
           type: "success",
@@ -79,26 +76,36 @@ export function ProducerPortal({ setPage }) {
           latitude: parseFloat(formData.latitude),
           longitude: parseFloat(formData.longitude),
         };
-        result = await addTransfer(data);
+        const result = await addTransfer(data);
         setMessage({
           type: "success",
-          text: `Transfer added to batch ${formData.batch_uuid}`,
+          text: `Transfer added to batch ${result.batch_uuid}`,
         });
       }
       
-      setFormData({
-        batch_uuid: "",
-        farm_name: "",
-        harvest_date: "",
-        quantity_kg: "",
-        grade: "",
-        produce: "",
-        action: "harvest",
-        latitude: "",
-        longitude: "",
-      });
-      setMode("create");
-      
+      if (mode === "create") {
+        setFormData({
+          ...formData, // Keep old form data
+          batch_uuid: result.batch_uuid, 
+          farm_name: formData.farm_name, 
+          action: "transfer", 
+        });
+        setMode("transfer"); 
+      } else {
+        // Clear form ONLY after a successful transfer
+        setFormData({
+          batch_uuid: "",
+          farm_name: "",
+          harvest_date: "",
+          quantity_kg: "",
+          grade: "",
+          produce: "",
+          action: "harvest", 
+          latitude: "",
+          longitude: "",
+        });
+        setMode("create"); // Go back to create mode
+      }
     } catch (error) {
       console.error(error);
       setMessage({
