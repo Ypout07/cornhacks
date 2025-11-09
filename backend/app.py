@@ -23,10 +23,11 @@ app = Flask(__name__)
 # ---
 # 1. INITIALIZE FIREBASE
 # ---
-if os.path.exists('serviceAccountKey.json'):
-    cred = credentials.Certificate('serviceAccountKey.json')
+if os.path.exists('backend\serviceAccountKey.json'):
+    cred = credentials.Certificate('backend\serviceAccountKey.json')
     firebase_admin.initialize_app(cred)
 else:
+    firebase_admin.initialize_app()
     print("WARNING: serviceAccountKey.json not found. App may not work on Render.")
 
 db = firestore.client() # This 'db' is your new database connection!
