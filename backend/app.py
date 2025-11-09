@@ -143,7 +143,7 @@ def init_batch():
         pdf.output(pdf_path)
 
         # HARD CODED FOR LOCAL
-        pdf_url = f"http://127.0.0.1:5000/qrcodes/{pdf_filename}"
+        pdf_url = f"https://cornhackshaa.onrender.com/qrcodes/{pdf_filename}"
 
         db.commit()
 
