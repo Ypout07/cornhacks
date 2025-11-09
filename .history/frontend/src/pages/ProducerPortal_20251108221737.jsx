@@ -4,8 +4,9 @@
 import { AlertCircle, ArrowLeft, CheckCircle, Package } from "lucide-react";
 import React, { useState } from "react";
 
-import { addTransfer, createBatch } from '../apiService';
-
+// Mock API for preview - replace with: import { addTransfer, createBatch } from '../apiService';
+const createBatch = async (data) => ({ batch_uuid: 'MOCK-BATCH-123' });
+const addTransfer = async (data) => ({ batch_uuid: data.batch_uuid });
 
 export function ProducerPortal({ setPage }) {
   const [mode, setMode] = useState("create");
