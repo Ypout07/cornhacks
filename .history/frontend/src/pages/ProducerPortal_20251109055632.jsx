@@ -12,7 +12,6 @@ export function ProducerPortal({ setPage }) {
     farm_name: "",
     harvest_date: "",
     quantity_kg: "",
-    crate_count: "",
     crate_number: "",
     grade: "",
     produce: "",
@@ -71,7 +70,7 @@ export function ProducerPortal({ setPage }) {
     setPdfUrl(null);
 
     if (mode === "create") {
-      if (!formData.farm_name || !formData.harvest_date || !formData.quantity_kg || !formData.crate_count ||
+      if (!formData.farm_name || !formData.harvest_date || !formData.quantity_kg ||
           !formData.grade || !formData.produce || !formData.latitude || !formData.longitude) {
         setMessage({ type: "error", text: "Please fill in all fields" });
         return;
@@ -96,7 +95,6 @@ export function ProducerPortal({ setPage }) {
           longitude: parseFloat(formData.longitude),
           harvest_date: formData.harvest_date,
           quantity_kg: parseFloat(formData.quantity_kg),
-          crate_count: parseFloat(formData.crate_count),
           crate_number: formData.crate_number,
           grade: formData.grade,
           produce: formData.produce,
@@ -132,7 +130,6 @@ export function ProducerPortal({ setPage }) {
           farm_name: "",
           harvest_date: "",
           quantity_kg: "",
-          crate_count: "",
           crate_number: "",
           grade: "",
           produce: "",
@@ -147,7 +144,6 @@ export function ProducerPortal({ setPage }) {
           farm_name: "",
           harvest_date: "",
           quantity_kg: "",
-          crate_count: "",
           crate_number: "",
           grade: "",
           produce: "",
@@ -652,50 +648,6 @@ export function ProducerPortal({ setPage }) {
                         name="produce"
                         placeholder="e.g., Bananas, Apples"
                         value={formData.produce}
-                        onChange={handleChange}
-                        style={{
-                          width: '100%',
-                          padding: '0.75rem 1rem',
-                          background: 'rgba(255, 255, 255, 0.08)',
-                          border: '2px solid rgba(134, 239, 172, 0.2)',
-                          borderRadius: '0.5rem',
-                          color: 'white',
-                          fontSize: '0.9375rem',
-                          fontWeight: '300',
-                          outline: 'none',
-                          transition: 'all 0.3s',
-                          boxSizing: 'border-box',
-                          letterSpacing: '0.01em'
-                        }}
-                        onFocus={(e) => {
-                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-                          e.currentTarget.style.borderColor = '#86efac';
-                        }}
-                        onBlur={(e) => {
-                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                          e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div>
-                      <label style={{ 
-                        display: 'block', 
-                        marginBottom: '0.5rem', 
-                        color: '#d1fae5',
-                        fontSize: '0.875rem',
-                        fontWeight: '400',
-                        letterSpacing: '0.01em'
-                      }}>
-                        Crate Count
-                      </label>
-                      <input
-                        type="number"
-                        name="crate_count"
-                        placeholder="e.g., 25"
-                        value={formData.crate_count}
                         onChange={handleChange}
                         style={{
                           width: '100%',

@@ -883,20 +883,20 @@ export function ProducerPortal({ setPage }) {
                     type="text"
                     name="latitude"
                     value={formData.latitude}
-                    readOnly
+                    onChange={handleChange}
+                    placeholder="e.g., 40.818009"
                     style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      background: 'rgba(134, 239, 172, 0.1)',
-                      border: '2px solid rgba(134, 239, 172, 0.3)',
-                      borderRadius: '0.5rem',
-                      color: '#86efac',
-                      fontSize: '0.9375rem',
-                      fontWeight: '500',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                      letterSpacing: '0.01em',
-                      cursor: 'not-allowed'
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      border: '2px solid rgba(134, 239, 172, 0.2)',
+                      color: 'white'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                      e.currentTarget.style.borderColor = '#86efac';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                      e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
                     }}
                   />
                 </div>

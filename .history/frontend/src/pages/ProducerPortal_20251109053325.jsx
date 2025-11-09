@@ -117,7 +117,6 @@ export function ProducerPortal({ setPage }) {
           action: formData.action,
           latitude: parseFloat(formData.latitude),
           longitude: parseFloat(formData.longitude),
-          crate_numbers_string: formData.crate_number || null
         };
         const result = await addTransfer(data);
         setMessage({
@@ -154,7 +153,7 @@ export function ProducerPortal({ setPage }) {
           action: "harvest", 
           latitude: "",
           longitude: "",
-          
+          crate_numbers_string: ""
         });
         setMode("create");
       }
@@ -726,48 +725,91 @@ export function ProducerPortal({ setPage }) {
               )}
 
               {mode === "transfer" && (
-                <>
-                  <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '0.5rem', 
-                      color: '#d1fae5',
-                      fontSize: '0.875rem',
-                      fontWeight: '400',
-                      letterSpacing: '0.01em'
-                    }}>
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      name="farm_name"
-                      placeholder="e.g., Transport Co., Warehouse"
-                      value={formData.farm_name}
-                      onChange={handleChange}
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem 1rem',
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        border: '2px solid rgba(134, 239, 172, 0.2)',
-                        borderRadius: '0.5rem',
-                        color: 'white',
-                        fontSize: '0.9375rem',
-                        fontWeight: '300',
-                        outline: 'none',
-                        transition: 'all 0.3s',
-                        boxSizing: 'border-box',
+                  <>
+                    <div>
+                      <label style={{ 
+                        display: 'block', 
+                        marginBottom: '0.5rem', 
+                        color: '#d1fae5',
+                        fontSize: '0.875rem',
+                        fontWeight: '400',
                         letterSpacing: '0.01em'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-                        e.currentTarget.style.borderColor = '#86efac';
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                        e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
-                      }}
-                    />
-                  </div>
+                      }}>
+                        Company Name
+                      </label>
+                      <input
+                        type="text"
+                        name="farm_name"
+                        placeholder="e.g., Transport Co., Warehouse"
+                        value={formData.farm_name}
+                        onChange={handleChange}
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem 1rem',
+                          background: 'rgba(255, 255, 255, 0.08)',
+                          border: '2px solid rgba(134, 239, 172, 0.2)',
+                          borderRadius: '0.5rem',
+                          color: 'white',
+                          fontSize: '0.9375rem',
+                          fontWeight: '300',
+                          outline: 'none',
+                          transition: 'all 0.3s',
+                          boxSizing: 'border-box',
+                          letterSpacing: '0.01em'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                          e.currentTarget.style.borderColor = '#86efac';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                          e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
+                        }}
+                      />
+                    </div>
+
+                    {/* --- THIS IS THE NEWLY ADDED BLOCK --- */}
+                    <div>
+                      <label style={{ 
+                        display: 'block', 
+                        marginBottom: '0.5rem', 
+                        color: '#d1fae5',
+                        fontSize: '0.875rem',
+                        fontWeight: '400',
+                        letterSpacing: '0.01em'
+                      }}>
+                        Crate Numbers (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        name="crate_numbers_string"
+                        placeholder="e.g., 101, 102, 105-110"
+                        value={formData.crate_numbers_string}
+                        onChange={handleChange}
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem 1rem',
+                          background: 'rgba(255, 255, 255, 0.08)',
+                          border: '2px solid rgba(134, 239, 172, 0.2)',
+                          borderRadius: '0.5rem',
+                          color: 'white',
+                          fontSize: '0.9375rem',
+                          fontWeight: '300',
+                          outline: 'none',
+                          transition: 'all 0.3s',
+                          boxSizing: 'border-box',
+                          letterSpacing: '0.01em'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                          e.currentTarget.style.borderColor = '#86efac';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                          e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
+                        }}
+                      />
+                    </div>
 
                   <div>
                     <label style={{ 

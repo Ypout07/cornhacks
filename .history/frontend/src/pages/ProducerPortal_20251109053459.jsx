@@ -117,7 +117,6 @@ export function ProducerPortal({ setPage }) {
           action: formData.action,
           latitude: parseFloat(formData.latitude),
           longitude: parseFloat(formData.longitude),
-          crate_numbers_string: formData.crate_number || null
         };
         const result = await addTransfer(data);
         setMessage({

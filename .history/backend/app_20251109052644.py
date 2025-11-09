@@ -164,10 +164,6 @@ def init_batch():
     
 @app.route("/api/transfer", methods=["POST"])
 def transfer_batch():
-    """
-    Receives a string of crate numbers (e.g., "1, 2, 5-10"),
-    parses it, and creates a new LedgerBlock for each one.
-    """
     data = request.get_json()
     db = next(get_db())
 
@@ -234,7 +230,6 @@ def transfer_batch():
         return jsonify({"error": str(e)}), 400
     finally:
         db.close()
-
 
 @app.route("/api/batch/<batch_uuid>", methods=["GET"])
 def get_data(batch_uuid):
