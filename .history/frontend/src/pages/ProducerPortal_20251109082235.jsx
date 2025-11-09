@@ -16,7 +16,8 @@ const addTransfer = async (data) => {
   return { success: true };
 };
 
-export function ProducerPortal({ setPage }) {
+export default function ProducerPortal() {
+  const [page, setPage] = useState('producer');
   const [mode, setMode] = useState("create");
   const [formData, setFormData] = useState({
     batch_uuid: "",
@@ -49,8 +50,11 @@ export function ProducerPortal({ setPage }) {
     let globeRef = null;
     let atmosphereRef = null;
     let globeGroup = null;
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
     let rotation = { x: 0, y: 0 };
     let targetRotation = { x: 0, y: 0 };
+    let activePointerId = null;
 
     try {
       // Scene setup
