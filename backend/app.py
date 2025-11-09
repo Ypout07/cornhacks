@@ -10,7 +10,7 @@ from PIL import Image
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-from utils import calculate_hash, haversine_audit_logic, confirm_chain, parse_crate_string
+from .utils import calculate_hash, haversine_audit_logic, confirm_chain, parse_crate_string
 import qrcode
 from qrcode import constants
 from fpdf import FPDF
