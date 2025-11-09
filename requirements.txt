@@ -6,3 +6,4 @@ sqlalchemy
 SQLAlchemy
 qrcode
 fpdf
+Pillow
