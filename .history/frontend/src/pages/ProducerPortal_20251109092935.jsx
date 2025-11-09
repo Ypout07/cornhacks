@@ -64,45 +64,25 @@ export function ProducerPortal({ setPage }) {
         return;
       }
 
-      console.log('Requesting camera access...');
       let stream;
       try {
         stream = await navigator.mediaDevices.getUserMedia({
-          video: { 
-            facingMode: 'environment',
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          }
+          video: { facingMode: 'environment' }
         });
-        console.log('Got back camera stream:', stream);
       } catch (err) {
         console.log('Back camera failed, trying any camera...', err);
         stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          }
+          video: true
         });
-        console.log('Got front camera stream:', stream);
       }
       
       streamRef.current = stream;
-      setShowScanner(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+      }
       
-      // Wait for modal to render, then attach stream
-      setTimeout(() => {
-        if (videoRef.current && stream) {
-          console.log('Attaching stream to video element');
-          videoRef.current.srcObject = stream;
-          videoRef.current.onloadedmetadata = () => {
-            console.log('Video metadata loaded, playing...');
-            videoRef.current.play().catch(err => {
-              console.error('Play failed:', err);
-              setMessage({ type: 'error', text: 'Failed to play video: ' + err.message });
-            });
-          };
-        }
-      }, 100);
+      setShowScanner(true);
       
       scanIntervalRef.current = setInterval(() => {
         if (videoRef.current && canvasRef.current && videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
