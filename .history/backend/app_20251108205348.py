@@ -122,7 +122,7 @@ def transfer_batch():
             previous_hash=previous_hash
         )
 
-        # Create the new LedgerBlock object
+        # 5. Create the new LedgerBlock object
         new_block = LedgerBlock(
             actor_name=transfer_data['actor_name'],
             action=transfer_data['action'],
@@ -137,7 +137,11 @@ def transfer_batch():
         db.add(new_block)
         db.commit()
 
-        return jsonify({"message": f"Transfer recorded"})
+        ts_pmo = "Failed"
+        if (valid_data(batch_uuid)):
+            ts_pmo = "Passed"
+        
+        return jsonify({"message": f"Transfer recorded Audit: {ts_pmo}"})
 
     except Exception as e:
         db.rollback() # Undo if there's an error
