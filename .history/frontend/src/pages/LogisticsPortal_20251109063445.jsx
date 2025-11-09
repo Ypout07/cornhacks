@@ -212,8 +212,8 @@ export function LogisticsPortal({ setPage }) {
             onClick={() => setMenuOpen(!menuOpen)}
             style={{
               background: 'none',
-              border: '2px solid rgba(134, 239, 172, 0.3)',
-              color: 'white',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+              color: '#86efac',
               padding: '0.5rem 1.25rem',
               borderRadius: '0.5rem',
               fontSize: '0.875rem',
@@ -226,11 +226,11 @@ export function LogisticsPortal({ setPage }) {
               letterSpacing: '0.01em'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'white';
-              e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
+              e.currentTarget.style.borderColor = '#86efac';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.3)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
               e.currentTarget.style.background = 'none';
             }}
           >
@@ -248,7 +248,7 @@ export function LogisticsPortal({ setPage }) {
               position: 'absolute',
               top: 'calc(100% + 0.5rem)',
               right: 0,
-              background: 'rgba(10, 31, 10, 0.98)',
+              background: 'rgba(251, 255, 251, 0.98)',
               border: '1px solid rgba(134, 239, 172, 0.3)',
               borderRadius: '0.5rem',
               minWidth: '180px',
@@ -267,7 +267,7 @@ export function LogisticsPortal({ setPage }) {
                   padding: '0.875rem 1.25rem',
                   background: 'none',
                   border: 'none',
-                  color: 'white',
+                  color: '#d1fae5',
                   fontSize: '0.9375rem',
                   fontWeight: '500',
                   textAlign: 'left',
@@ -276,12 +276,12 @@ export function LogisticsPortal({ setPage }) {
                   borderBottom: '1px solid rgba(134, 239, 172, 0.1)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.background = 'rgba(239, 239, 239, 0.1)';
+                  e.currentTarget.style.color = '#86efac';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.color = '#d1fae5';
                 }}
               >
                 About
@@ -296,7 +296,7 @@ export function LogisticsPortal({ setPage }) {
                   padding: '0.875rem 1.25rem',
                   background: 'none',
                   border: 'none',
-                  color: 'white',
+                  color: '#d1fae5',
                   fontSize: '0.9375rem',
                   fontWeight: '500',
                   textAlign: 'left',
@@ -306,11 +306,11 @@ export function LogisticsPortal({ setPage }) {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.color = '#86efac';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.color = '#d1fae5';
                 }}
               >
                 Process
@@ -325,7 +325,7 @@ export function LogisticsPortal({ setPage }) {
                   padding: '0.875rem 1.25rem',
                   background: 'none',
                   border: 'none',
-                  color: 'white',
+                  color: '#d1fae5',
                   fontSize: '0.9375rem',
                   fontWeight: '500',
                   textAlign: 'left',
@@ -334,11 +334,11 @@ export function LogisticsPortal({ setPage }) {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.color = '#86efac';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.color = '#d1fae5';
                 }}
               >
                 Producer Portal
@@ -387,7 +387,7 @@ export function LogisticsPortal({ setPage }) {
             color: 'white'
           }}>
             Track Your Produce.<br />
-            <span style={{ fontWeight: '600', color: 'white' }}>Trust the Chain.</span>
+            <span style={{ fontWeight: '600', color: '#86efac' }}>Trust the Chain.</span>
           </h1>
           <p style={{ 
             fontSize: '1.25rem', 

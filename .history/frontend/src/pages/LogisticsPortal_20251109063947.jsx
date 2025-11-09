@@ -213,7 +213,7 @@ export function LogisticsPortal({ setPage }) {
             style={{
               background: 'none',
               border: '2px solid rgba(134, 239, 172, 0.3)',
-              color: 'white',
+              color: '#86efac',
               padding: '0.5rem 1.25rem',
               borderRadius: '0.5rem',
               fontSize: '0.875rem',
@@ -226,7 +226,7 @@ export function LogisticsPortal({ setPage }) {
               letterSpacing: '0.01em'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'white';
+              e.currentTarget.style.borderColor = '#86efac';
               e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
             }}
             onMouseLeave={(e) => {
@@ -277,7 +277,7 @@ export function LogisticsPortal({ setPage }) {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.color = '#86efac';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'none';
@@ -306,7 +306,7 @@ export function LogisticsPortal({ setPage }) {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.color = '#86efac';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'none';
@@ -334,7 +334,7 @@ export function LogisticsPortal({ setPage }) {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.color = '#86efac';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'none';
@@ -387,7 +387,7 @@ export function LogisticsPortal({ setPage }) {
             color: 'white'
           }}>
             Track Your Produce.<br />
-            <span style={{ fontWeight: '600', color: 'white' }}>Trust the Chain.</span>
+            <span style={{ fontWeight: '600', color: '#86efac' }}>Trust the Chain.</span>
           </h1>
           <p style={{ 
             fontSize: '1.25rem', 

@@ -5,7 +5,6 @@ import { AlertCircle, ArrowLeft, CheckCircle, Package } from "lucide-react";
 import React, { useState } from "react";
 import { addTransfer, createBatch } from '../apiService';
 
-
 export function ProducerPortal({ setPage }) {
   const [mode, setMode] = useState("create");
   const [formData, setFormData] = useState({
@@ -14,13 +13,11 @@ export function ProducerPortal({ setPage }) {
     harvest_date: "",
     quantity_kg: "",
     crate_count: "",
-    crate_number: "",
     grade: "",
     produce: "",
     action: "harvest",
     latitude: "",
     longitude: "",
-    crate_numbers_string: ""
   });
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -78,16 +75,13 @@ export function ProducerPortal({ setPage }) {
         return;
       }
     } else {
-      if (!formData.batch_uuid || !formData.farm_name || !formData.crate_number || !formData.action || !formData.latitude || !formData.longitude) {
+      if (!formData.batch_uuid || !formData.farm_name || !formData.action || !formData.latitude || !formData.longitude) {
         setMessage({ type: "error", text: "Please fill in all fields" });
         return;
       }
     }
 
     setLoading(true);
-    
-    let result = null; 
-    
     try {
       if (mode === "create") {
         const data = {
@@ -98,14 +92,10 @@ export function ProducerPortal({ setPage }) {
           harvest_date: formData.harvest_date,
           quantity_kg: parseFloat(formData.quantity_kg),
           crate_count: parseFloat(formData.crate_count),
-          crate_number: formData.crate_number,
           grade: formData.grade,
           produce: formData.produce,
-          crate_numbers_string: formData.crate_numbers_string || null
         };
-
-        result = await createBatch(data); 
-        console.log("CREATED BATCH WITH ID:", result.batch_uuid);
+        const result = await createBatch(data);
         setMessage({
           type: "success",
           text: `Batch created successfully! ID: ${result.batch_uuid}`,
@@ -118,7 +108,6 @@ export function ProducerPortal({ setPage }) {
           action: formData.action,
           latitude: parseFloat(formData.latitude),
           longitude: parseFloat(formData.longitude),
-          crate_numbers_string: formData.crate_number || null
         };
         const result = await addTransfer(data);
         setMessage({
@@ -127,38 +116,21 @@ export function ProducerPortal({ setPage }) {
         });
       }
       
-      if (mode === "create") {
-        setFormData({
-          batch_uuid: "",
-          farm_name: "",
-          harvest_date: "",
-          quantity_kg: "",
-          crate_count: "",
-          crate_number: "",
-          grade: "",
-          produce: "",
-          action: "harvest",
-          latitude: "",
-          longitude: "",
-          crate_numbers_string: ""
-        });
-      } else {
-        setFormData({
-          batch_uuid: "",
-          farm_name: "",
-          harvest_date: "",
-          quantity_kg: "",
-          crate_count: "",
-          crate_number: "",
-          grade: "",
-          produce: "",
-          action: "harvest", 
-          latitude: "",
-          longitude: "",
-          
-        });
-        setMode("create");
-      }
+      // Clear form on success (but keep GPS coordinates)
+      const currentLat = formData.latitude;
+      const currentLng = formData.longitude;
+      setFormData({
+        batch_uuid: "",
+        farm_name: "",
+        harvest_date: "",
+        quantity_kg: "",
+        crate_count: "",
+        grade: "",
+        produce: "",
+        action: mode === "create" ? "harvest" : "transfer",
+        latitude: currentLat,
+        longitude: currentLng,
+      });
     } catch (error) {
       console.error(error);
       setMessage({
@@ -200,9 +172,9 @@ export function ProducerPortal({ setPage }) {
         <button
           onClick={() => setPage('home')}
           style={{
-            background: 'transparent',
+            background: 'none',
             border: '2px solid rgba(134, 239, 172, 0.3)',
-            color: 'white',
+            color: '#86efac',
             padding: '0.5rem 1.25rem',
             borderRadius: '0.5rem',
             fontSize: '0.875rem',
@@ -217,12 +189,10 @@ export function ProducerPortal({ setPage }) {
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = '#86efac';
             e.currentTarget.style.background = 'rgba(134, 239, 172, 0.1)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.3)';
-            e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.background = 'none';
           }}
         >
           <ArrowLeft size={16} strokeWidth={2} />
@@ -262,21 +232,22 @@ export function ProducerPortal({ setPage }) {
           {/* Title */}
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
             <h1 style={{ 
-              fontSize: '2.5rem', 
-              fontWeight: '300', 
+              fontSize: '3.5rem', 
+              fontWeight: '200', 
               marginBottom: '0.75rem',
               lineHeight: '1.2',
-              letterSpacing: '-0.01em',
-              color: 'white'
+              letterSpacing: '0.03em',
+              color: '#86efac',
+              fontFamily: "'Helvetica Neue', 'Arial', sans-serif"
             }}>
-              Producer <span style={{ fontWeight: '600', color: '#86efac' }}>Portal</span>
+              Producer Portal
             </h1>
             <p style={{ 
-              fontSize: '1rem', 
+              fontSize: '1.125rem', 
               color: '#d1fae5',
               fontWeight: '300',
               lineHeight: '1.6',
-              letterSpacing: '0.01em'
+              letterSpacing: '0.02em'
             }}>
               Create batches and record transfers in the supply chain
             </p>
@@ -415,11 +386,10 @@ export function ProducerPortal({ setPage }) {
 
           {/* Form */}
           <div style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(134, 239, 172, 0.2)',
+            background: 'transparent',
             borderRadius: '1rem',
-            padding: '2rem',
-            backdropFilter: 'blur(10px)'
+            padding: '2rem 0',
+            backdropFilter: 'none'
           }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               {mode === "transfer" && (
@@ -427,10 +397,11 @@ export function ProducerPortal({ setPage }) {
                   <label style={{ 
                     display: 'block', 
                     marginBottom: '0.5rem', 
-                    color: '#d1fae5',
-                    fontSize: '0.875rem',
-                    fontWeight: '400',
-                    letterSpacing: '0.01em'
+                    color: '#86efac',
+                    fontSize: '1rem',
+                    fontWeight: '300',
+                    letterSpacing: '0.05em',
+                    fontFamily: "'Helvetica Neue', 'Arial', sans-serif"
                   }}>
                     Batch UUID
                   </label>
@@ -539,8 +510,7 @@ export function ProducerPortal({ setPage }) {
                           outline: 'none',
                           transition: 'all 0.3s',
                           boxSizing: 'border-box',
-                          letterSpacing: '0.01em',
-                          colorScheme: 'dark'
+                          letterSpacing: '0.01em'
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
@@ -735,55 +705,13 @@ export function ProducerPortal({ setPage }) {
                       fontWeight: '400',
                       letterSpacing: '0.01em'
                     }}>
-                      Company Name
+                      Actor Name
                     </label>
                     <input
                       type="text"
                       name="farm_name"
                       placeholder="e.g., Transport Co., Warehouse"
                       value={formData.farm_name}
-                      onChange={handleChange}
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem 1rem',
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        border: '2px solid rgba(134, 239, 172, 0.2)',
-                        borderRadius: '0.5rem',
-                        color: 'white',
-                        fontSize: '0.9375rem',
-                        fontWeight: '300',
-                        outline: 'none',
-                        transition: 'all 0.3s',
-                        boxSizing: 'border-box',
-                        letterSpacing: '0.01em'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-                        e.currentTarget.style.borderColor = '#86efac';
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                        e.currentTarget.style.borderColor = 'rgba(134, 239, 172, 0.2)';
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '0.5rem', 
-                      color: '#d1fae5',
-                      fontSize: '0.875rem',
-                      fontWeight: '400',
-                      letterSpacing: '0.01em'
-                    }}>
-                      Crate Number
-                    </label>
-                    <input
-                      type="text"
-                      name="crate_number"
-                      placeholder="e.g. 1, 2, 5-10"
-                      value={formData.crate_number}
                       onChange={handleChange}
                       style={{
                         width: '100%',
@@ -824,7 +752,7 @@ export function ProducerPortal({ setPage }) {
                     <div style={{ display: 'flex', gap: '1rem' }}>
                       <button
                         type="button"
-                        onClick={() => handleActionChange('Arrived At Warehouse')}
+                        onClick={() => handleActionChange('transfer')}
                         style={{
                           flex: 1,
                           padding: '0.75rem',
@@ -839,7 +767,7 @@ export function ProducerPortal({ setPage }) {
                           letterSpacing: '0.01em'
                         }}
                       >
-                        Arrived At Warehouse
+                        Transfer
                       </button>
                       <button
                         type="button"
@@ -858,14 +786,14 @@ export function ProducerPortal({ setPage }) {
                           letterSpacing: '0.01em'
                         }}
                       >
-                        Arrived At Store
+                        Store
                       </button>
                     </div>
                   </div>
                 </>
               )}
 
-              {/* GPS Coordinates - Auto-detected */}
+              {/* GPS Coordinates - Auto-detected and Read-only */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ 
@@ -882,7 +810,7 @@ export function ProducerPortal({ setPage }) {
                     type="text"
                     name="latitude"
                     value={formData.latitude}
-                    onChange={handleChange}
+                    readOnly
                     style={{
                       width: '100%',
                       padding: '0.75rem 1rem',
@@ -894,7 +822,8 @@ export function ProducerPortal({ setPage }) {
                       fontWeight: '500',
                       outline: 'none',
                       boxSizing: 'border-box',
-                      letterSpacing: '0.01em'
+                      letterSpacing: '0.01em',
+                      cursor: 'not-allowed'
                     }}
                   />
                 </div>
@@ -913,7 +842,7 @@ export function ProducerPortal({ setPage }) {
                     type="text"
                     name="longitude"
                     value={formData.longitude}
-                    onChange={handleChange}
+                    readOnly
                     style={{
                       width: '100%',
                       padding: '0.75rem 1rem',
@@ -925,7 +854,8 @@ export function ProducerPortal({ setPage }) {
                       fontWeight: '500',
                       outline: 'none',
                       boxSizing: 'border-box',
-                      letterSpacing: '0.01em'
+                      letterSpacing: '0.01em',
+                      cursor: 'not-allowed'
                     }}
                   />
                 </div>
