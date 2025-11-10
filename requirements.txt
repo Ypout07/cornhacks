@@ -1,9 +1,0 @@
-uvicorn
-flask
-haversine
-flask-cors
-sqlalchemy
-SQLAlchemy
-qrcode
-fpdf
-Pillow

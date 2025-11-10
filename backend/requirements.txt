@@ -1,0 +1,7 @@
+Flask==3.1.2
+flask_cors==6.0.1
+fpdf2==2.8.5
+haversine==2.9.0
+Pillow==12.0.0
+qrcode==8.2
+SQLAlchemy==2.0.44

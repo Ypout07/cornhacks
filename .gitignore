@@ -205,3 +205,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+.history
+frontend/node_modules
+backend/venv/
+backend/__pycahche__
+backend/project.db
