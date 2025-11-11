@@ -4,7 +4,7 @@ The Banana Blockchain is a transparent, immutable ledger system designed to trac
 
 ## The Problem
 
-Today's food supply chains are fragmented, leading to a major issue: a lack of trust and traceability. When a product recall occurs or quality issues arise, tracing the exact point of failure is slow, costly, and often impossible. Consumers often demand more information about the origins of their food and desire a source of accountablitily for the upcharged "organic" or "fair-trade" produce they're purchasing. 
+Today's food supply chains are fragmented, leading to a major issue: a lack of trust and traceability. When a product recall occurs or quality issues arise, tracing the exact point of failure is slow, costly, and often impossible. Consumers often demand more information about the origins of their food and desire a source of accountability for the upcharged "organic" or "fair-trade" produce they're purchasing. 
 
 ## The Solution: An Immutable, Stateless Ledger
 
@@ -14,15 +14,15 @@ Today's food supply chains are fragmented, leading to a major issue: a lack of t
 
 * Intuitive Proof for the  User: Each customer is able to easily enter their produce code and view a real, mapped trail of the life of their good, complete with security audits and verification. 
 
-## Audit and Technical Feautres
+## Audit and Technical Features
 
-### The Proccess:
+### The Process:
 
 * Unique ID creation for each batch, complete with QR code generation with easy downloading at the genesis block when a batch is created. These codes are placed on each crate and get monitored throughout the supply chain. 
 
 * Easy scanning and blockchain updating over each transfer step is encouraged using both the QR codes, natural input parsing, and GPS coordinates. This simultaneously allows for chain verification and forking of the batch. 
 
-* Beautiful and robust customer-focused features. The consumer can easily input their produce's code (e.g. APL2-65T2-CRATE_1)and view a real globe, highlighting each step of the process and giving the much-needed piece of mind for the customer. 
+* Beautiful and robust customer-focused features. The consumer can easily input their produce's code (e.g. APL2-65T2-CRATE_1) and view a real globe, highlighting each step of the process and giving the much-needed peace of mind for the customer. 
 
 ### Auditing Features:
 
@@ -103,7 +103,7 @@ Open a **new terminal window** and follow these steps for the client-side applic
 3.  **Run the Frontend Development Server:**
     This command starts the client-side server prompts you to open the application in your browser at `http://localhost:5173`.
     ```bash
-    npm dev run
+    npm run dev
     ```
     Leave this terminal window running.
 
@@ -113,17 +113,17 @@ Now, you may act as the different players in the supply chain, eventually making
 
 Due to time constraints, we were not able to implement the full suite of features we had planned. Here are a few ways we could expand upon this (and maybe we will in the future!):
 
-* Firebase-hosted database functionlity to broaden the scope of information storage and blockchain accuracy for customers
+* Firebase-hosted database functionality to broaden the scope of information storage and blockchain accuracy for customers
 
-* More robust ledger technology using Ethereum to increase the reliablity of the blockchain
+* More robust ledger technology using Ethereum to increase the reliability of the blockchain
 
 * Dashboards of information about specific supply chain trends to inform farm management
 
 * More effective QR code scanning beyond producing crate codes
 
-* Specific support for more than just produce. This could highlight the supply chain process for products pertaining to dietary restricitions, religious beliefs, and non-produce items
+* Specific support for more than just produce. This could highlight the supply chain process for products pertaining to dietary restrictions, religious beliefs, and non-produce items
 
-* And so much more! This is just the beginning of what's possible at the intersection of supply chain transparency and blockchain technology. There are endless opportunites in this ever-changing market
+* And so much more! This is just the beginning of what's possible at the intersection of supply chain transparency and blockchain technology. There are endless opportunities in this ever-changing market
 
 ## Authors
 
