@@ -53,6 +53,7 @@ def haversine_audit_logic(blocks):
         return False # Fail on any error
 
 def confirm_chain(blocks, batch):
+    # This will reasses the blockchain and flag if there was anything tampered with throughout the process
     for i in range(len(blocks)):
         block = blocks[i]
         if len(block.previous_hash) != 64 or len(block.current_hash) != 64:
@@ -78,12 +79,10 @@ def confirm_chain(blocks, batch):
         return True
 
 def parse_crate_string(crate_string):
-    """
-    Parses a string like "1, 2, 5-10" into a list of integers.
-    """
+     # Parses a string like "1, 2, 5-10" into a list of integers.
     crates = set() # Destroy duplicates
     try:
-        # Split by comma first e.g., ["1", " 2", " 5-10"]
+        # Split by comma first 
         parts = crate_string.split(',')
         
         for part in parts:
@@ -91,7 +90,7 @@ def parse_crate_string(crate_string):
             if not part:
                 continue
             
-            # Check if it's a range (e.g., "5-10")
+            # Check if it's a range
             if '-' in part:
                 start, end = part.split('-')
                 start_num = int(start)
@@ -108,68 +107,3 @@ def parse_crate_string(crate_string):
         return [] # Return an empty list if the format is bad
         
     return list(crates) 
-
-
-'''
-        # In /backend/app.py
-# ... (all your other imports and routes) ...
-
-@app.route("/api/history", methods=["GET"])
-def get_crate_history():
-    """
-    This is the "smart" history endpoint.
-    It combines the main batch history (harvest) with the
-    specific crate's history (transfer) to show a full path.
-    """
-    
-    # 1. Get the IDs from the URL parameters
-    batch_uuid = request.args.get('batch_uuid')
-    crate_id = request.args.get('crate_id')
-    
-    if not batch_uuid or not crate_id:
-        return jsonify({"error": "batch_uuid and crate_id are required"}), 400
-
-    db = next(get_db())
-    try:
-        # 2. Find the parent batch
-        batch = db.query(Batch).filter(Batch.batch_uuid == batch_uuid).first()
-        if not batch:
-            return jsonify({"error": "Batch not found"}), 404
-
-        # 3. Get the "Common History" (e.g., "Harvested")
-        # These are blocks where crate_id is NULL
-        common_blocks = db.query(LedgerBlock).filter(
-            LedgerBlock.batch_id == batch.id,
-            LedgerBlock.crate_id == None
-        ).all()
-
-        # 4. Get the "Specific Crate History" (e.g., "Moved to Truck A")
-        # These are blocks that match our specific crate_id
-        crate_blocks = db.query(LedgerBlock).filter(
-            LedgerBlock.batch_id == batch.id,
-            LedgerBlock.crate_id == crate_id
-        ).all()
-
-        # 5. Combine the two lists and sort them by their ID
-        # This stitches the two histories together in the correct order
-        all_blocks = sorted(common_blocks + crate_blocks, key=lambda block: block.id)
-
-        # 6. Format the final list for the frontend
-        history_list = []
-        for block in all_blocks:
-            history_list.append({
-                "actor_name": block.actor_name,
-                "action": block.action,
-                "timestamp": block.timestamp.isoformat(),
-                "latitude": block.latitude,
-                "longitude": block.longitude
-            })
-            
-        return jsonify(history_list)
-
-    except Exception as e:
-        print(f"--- ERROR IN /api/history ---: {e}")
-        return jsonify({"error": str(e)}), 400
-    finally:
-        db.close()
-'''

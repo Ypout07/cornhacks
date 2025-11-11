@@ -47,7 +47,7 @@ class LedgerBlock(Base):
     
     batch_id = Column(Integer, ForeignKey("batches.id"))
     crate_id = Column(String, nullable=True, index=True)
-    
+
     batch = relationship("Batch", back_populates="ledger_blocks")
 
 # Connection point
@@ -58,3 +58,4 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def create_db_and_tables(): # Only run ONCE in app.py
     Base.metadata.create_all(bind=engine)
+    

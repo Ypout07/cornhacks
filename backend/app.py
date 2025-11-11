@@ -28,11 +28,13 @@ def get_db():
     finally:
         db.close()
 
+# Now, API endpoints:
 
 @app.route("/")
 def home():
     return jsonify({"message" : "Welcome to Banana Blockchain"})
 
+# To intitialize a batch 
 @app.route("/api/batch", methods=["POST"])
 def init_batch():
     batch_data = request.get_json()
@@ -62,7 +64,6 @@ def init_batch():
         db.refresh(new_batch)
 
         # Create the first Block object in the chain
-
         genesis_data = f"{id}{batch_data['farm_name']}{batch_data['harvest_date']}"
         previous_hash = "0"*64 # since this is the first block, this is an empty hash
 
@@ -92,14 +93,13 @@ def init_batch():
         os.makedirs("qrcodes", exist_ok=True)
 
         try:
-            # Put a 'banana_logo.png' file in your /backend folder
             logo = Image.open("banana_logo.webp") 
             
             # Resize logo to be small
             logo_w, logo_h = logo.size
-            logo_max_size = 60 # max width/height in pixels
+            logo_max_size = 60 
             logo.thumbnail((logo_max_size, logo_max_size))
-            logo_w, logo_h = logo.size # Get new, smaller size
+            logo_w, logo_h = logo.size 
             
         except FileNotFoundError:
             print("WARNING: banana_logo.png not found. QR codes will be plain.")
@@ -142,11 +142,12 @@ def init_batch():
         pdf_path = os.path.join("qrcodes", pdf_filename)
         pdf.output(pdf_path)
 
-        # HARD CODED FOR LOCAL
+        # URL to downloaded document
         pdf_url = f"http://127.0.0.1:5000/qrcodes/{pdf_filename}"
 
         db.commit()
 
+        # Returns UUID and PDF URL to be displayed
         return jsonify({
             "message" : "Batch has been initialized",
             "batch_uuid" : id,
@@ -161,17 +162,15 @@ def init_batch():
     finally:
         db.close() # Make sure to close up the database
 
-    
+# Adding a transfer block to the ledger
 @app.route("/api/transfer", methods=["POST"])
 def transfer_batch():
-    """
-    Receives a string of crate numbers (e.g., "1, 2, 5-10"),
-    parses it, and creates a new LedgerBlock for each one.
-    """
     data = request.get_json()
     db = next(get_db())
 
+    # We need to make sure we connect each "child batch" (can happen multiple times) to the previous one
     try:
+        # Assign information
         batch_uuid = data['batch_uuid']
         crate_string = data['crate_numbers_string']
         actor_name = data['actor_name']
@@ -235,43 +234,7 @@ def transfer_batch():
     finally:
         db.close()
 
-
-@app.route("/api/batch/<batch_uuid>", methods=["GET"])
-def get_data(batch_uuid):
-
-    db = next(get_db())
-    
-    try:
-        # Again, finds batch
-        batch = db.query(Batch).filter(Batch.batch_uuid == batch_uuid).first()
-
-        if not batch:
-            return jsonify({"error": "Batch not found"}), 404
-
-        # Gives the list of all LedgerBlocks
-        blocks = db.query(LedgerBlock).filter(
-            LedgerBlock.batch_id == batch.id
-        ).order_by(LedgerBlock.id.asc()).all() # .asc() = ascending, 1, 2, 3...
-
-        # Format
-        history_list = []
-        for block in blocks:
-            history_list.append({
-                "actor_name": block.actor_name,
-                "action": block.action,
-                "timestamp": block.timestamp.isoformat() + "Z", # Format as ISO string
-                "latitude": block.latitude,
-                "longitude": block.longitude
-            })
-            
-        # Return entire list
-        return jsonify(history_list)
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-    finally:
-        db.close()
-
+# Audits the batch for changes in the hash and for suspicous travel speeds using the haversine formula
 @app.route("/api/batch/<batch_uuid>/audit", methods=["GET"])
 def get_audit_data(batch_uuid):
     db = next(get_db())
@@ -311,6 +274,7 @@ def download_file(filename):
     # This serves files from a new folder called 'qrcodes'
     return send_from_directory('qrcodes', filename, as_attachment=True)
 
+# This is a testing function to highlight the /audit blockchain check 
 @app.route("/api/batch/hack", methods=["POST"])
 def hackdb():
     id = request.get_data().decode('ascii')
@@ -334,6 +298,7 @@ def hackdb():
     finally:
         db.close()
 
+# This takes in a specific crate ID and returns its specific history
 @app.route("/api/history", methods=["GET"])
 def get_crate_history():
     """
@@ -387,3 +352,4 @@ def get_crate_history():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+    

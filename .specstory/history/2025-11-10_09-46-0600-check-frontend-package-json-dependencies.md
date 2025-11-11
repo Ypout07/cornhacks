@@ -586,3 +586,119 @@ The banana logo will now appear as the favicon in browser tabs. The change will 
 
 ---
 
+_**User (2025-11-08 18:08-0600)**_
+
+is the get_data function under the /batch/<uuid> api endpoint used anymore, or was that taken over by the get_crate_history function
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: backend/app.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="grep" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "get_data|get_crate_history|/batch/|/history" in "backend/app.py" • 9 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `backend/app.py` | `@app.route("/api/batch/<batch_uuid>", methods=["GET"])` | L239 |
+| `backend/app.py` | `def get_data(batch_uuid):` | L240 |
+| `backend/app.py` | `@app.route("/api/batch/<batch_uuid>/audit", methods=["GET"])` | L275 |
+| `backend/app.py` | `print(f"--- ERROR IN /api/batch/audit ---: \{e\}")` | L303 |
+| `backend/app.py` | `@app.route("/api/batch/hack", methods=["POST"])` | L314 |
+| `backend/app.py` | `id = request.get_data().decode('ascii')` | L316 |
+| `backend/app.py` | `@app.route("/api/history", methods=["GET"])` | L337 |
+| `backend/app.py` | `def get_crate_history():` | L338 |
+| `backend/app.py` | `print(f"--- ERROR IN /api/history ---: \{e\}")` | L383 |
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Checking which endpoint the frontend uses:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: frontend/src/apiService.js</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="grep" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "get_data|getCrateHistory|getBatchHistoryAudit|/api/batch/|/api/history" in "frontend/src" • 7 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `frontend/src\pages\LogisticsPortal.jsx` | `import \{ getCrateHistory, getBatchHistoryAudit \} from '../apiService';` | L6 |
+| `frontend/src\pages\LogisticsPortal.jsx` | `getCrateHistory(parsedBatchUuid, parsedCrateId),` | L147 |
+| `frontend/src\pages\LogisticsPortal.jsx` | `getBatchHistoryAudit(parsedBatchUuid)` | L148 |
+| `frontend/src\apiService.js` | `export const getCrateHistory = async (batchUuid, crateId) => \{` | L42 |
+| `frontend/src\apiService.js` | `const response = await axios.get(`$\{API_BASE_URL\}/api/history`, \{` | L44 |
+| `frontend/src\apiService.js` | `export const getBatchHistoryAudit = async (batchUuid) => \{` | L62 |
+| `frontend/src\apiService.js` | `const response = await axios.get(`$\{API_BASE_URL\}/api/batch/$\{batchUuid\}/audit`); // Same idea, but with /audit endpoint` | L64 |
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+The `get_data` function at `/api/batch/<batch_uuid>` is not used by the frontend.
+
+**Old endpoint (unused):**
+- `/api/batch/<batch_uuid>` — `get_data()` returns all blocks for a batch, ignoring crate-specific tracking.
+
+**New endpoint (in use):**
+- `/api/history` — `get_crate_history()` combines:
+  - Common batch history (harvest blocks where `crate_id` is NULL)
+  - Crate-specific history (transfer blocks for the specific crate)
+  - Returns a merged timeline
+
+The frontend uses `getCrateHistory()` which calls `/api/history` (see `LogisticsPortal.jsx` line 147).
+
+**Recommendation:** You can remove the `get_data` function and the `/api/batch/<batch_uuid>` endpoint unless you need it for testing or debugging. The crate-specific endpoint is the one in use.
+
+Should I remove the unused endpoint?
+
+---
+

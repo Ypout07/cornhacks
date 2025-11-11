@@ -22,7 +22,7 @@ Today's food supply chains are fragmented, leading to a major issue: a lack of t
 
 * Easy scanning and blockchain updating over each transfer step is encouraged using both the QR codes, natural input parsing, and GPS coordinates. This simultaneously allows for chain verification and forking of the batch. 
 
-* Beautiful and robust customer-focused features. The consumer can easily input their batch code and view a real globe, highlighting each step of the process and giving the much-needed piece of mind for the customer. 
+* Beautiful and robust customer-focused features. The consumer can easily input their produce's code (e.g. APL2-65T2-CRATE_1)and view a real globe, highlighting each step of the process and giving the much-needed piece of mind for the customer. 
 
 ### Auditing Features:
 
@@ -109,6 +109,22 @@ Open a **new terminal window** and follow these steps for the client-side applic
 
 Now, you may act as the different players in the supply chain, eventually making it to the customer view and seeing the entire process. 
 
+## Possible Next Steps
+
+Due to time constraints, we were not able to implement the full suite of features we had planned. Here are a few ways we could expand upon this (and maybe we will in the future!):
+
+* Firebase-hosted database functionlity to broaden the scope of information storage and blockchain accuracy for customers
+
+* More robust ledger technology using Ethereum to increase the reliablity of the blockchain
+
+* Dashboards of information about specific supply chain trends to inform farm management
+
+* More effective QR code scanning beyond producing crate codes
+
+* Specific support for more than just produce. This could highlight the supply chain process for products pertaining to dietary restricitions, religious beliefs, and non-produce items
+
+* And so much more! This is just the beginning of what's possible at the intersection of supply chain transparency and blockchain technology. There are endless opportunites in this ever-changing market
+
 ## Authors
 
-This project was authored by Nathan McCormick, Adam Alkawaz, and Ogochuckwu Ibe-Ikechi. 
+This project was authored by Nathan McCormick, Adam Alkawaz, and Ogochuckwu Ibe-Ikechi at the University of Nebraska-Lincoln's Cornhacks hackathon on November 8-9, 2025. The theme was "bananahacks," and our software was brought from ideation to production in less than 24 hours. 

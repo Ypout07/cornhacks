@@ -1,3 +1,4 @@
+// Frontend API connections
 import axios from 'axios';
 
 // const API_BASE_URL = 'https://cornhackshaa.onrender.com'; PRODUCTION
